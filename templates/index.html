@@ -1,19 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	
-	<title>congrep</title>
-	<link type="text/css" rel="stylesheet" href="/static/css/app.css"/>
-	
-	{% include 'ga.script' %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>ConGrep</title>
+    <link type="text/css" rel="stylesheet" href="/static/css/app.css"/>
+    
+    {% include 'ga.script' %}
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
 </head>
-<body>
-	<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
-	Congress, Searchable
+<body ng-app=congress_app ng-controller="congress_ctrl">
+{% raw %}
+    <div class="search-box">
+        <input type="text" ng-model="search_criteria" placeholder="Search..." />
+        <button type="button" ng-click="run_search()">Search</button>
+    </div>
+    
+    <div class="legislator-box">
+        <div class="legislator-item" ng-repeat="legislator in legislators ">
+            <div><a href="{{ legislator.website }}">{{ legislator.first_name }} {{ legislator.last_name }}</a></div>
+            <div ng-show="{{ legislator.twitter_id != undefined }}"><a href="http://twitter.com/{{ legislator.twitter_id }}">Twitter</a></div>
+            <div ng-show="{{ legislator.facebook_id != undefined }}"><a href="http://facebook.com/{{ legislator.facebook_id }}">Facebook</a></div>
+        </div>
+    </div>
+    
+{% endraw %}
 </body>
 
+<script type="text/javascript">
+    var sunlight_email = '{{ sunlight_email }}';
+    var sunlight_api_key = '{{ sunlight_api_key }}';
+    var sunlight_root = 'https://congress.api.sunlightfoundation.com';
+    
+    var congress_app = angular.module('congress_app', []);
+
+    var congress_ctrl = function ($scope, $http) {
+        $scope.search_criteria = "";
+        $scope.legislators = [];
+        
+        $scope.run_search = function(){
+            $http.get(sunlight_root + '/legislators/locate?apikey=' + sunlight_api_key + '&zip=' + $scope.search_criteria).then(
+                function(result){
+                    $scope.legislators = result.data.results;
+                }
+            );
+        }
+    };
+
+    congress_app.controller('congress_ctrl', congress_ctrl);
+</script>
 
 </html>
