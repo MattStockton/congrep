@@ -7,24 +7,38 @@
     
     <title>ConGrep</title>
     <link type="text/css" rel="stylesheet" href="/static/css/app.css"/>
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
     
     {% include 'ga.script' %}
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
 </head>
 <body ng-app=congress_app ng-controller="congress_ctrl">
 {% raw %}
-    <div class="search-box">
-        <input type="text" ng-model="search_criteria" placeholder="Search..." />
-        <button type="button" ng-click="run_search()">Search</button>
-    </div>
-    
-    <div class="legislator-box">
-        <div class="legislator-item" ng-repeat="legislator in legislators ">
-            <div><a href="{{ legislator.website }}">{{ legislator.first_name }} {{ legislator.last_name }}</a></div>
-            <div ng-show="{{ legislator.twitter_id != undefined }}"><a href="http://twitter.com/{{ legislator.twitter_id }}">Twitter</a></div>
-            <div ng-show="{{ legislator.facebook_id != undefined }}"><a href="http://facebook.com/{{ legislator.facebook_id }}">Facebook</a></div>
+
+    <div id="search_header">ConGrep</div>
+    <form class="form-wrapper cf js-command-form" ng-submit="run_search()">
+        <input type="text" ng-model="search_criteria" placeholder="Seach by Zip Code..." required>
+        <button type="submit">Search</button>
+    </form>
+ 
+    <div id="search_results">
+        <div class="legislator" ng-repeat="legislator in legislators ">
+            <div class="legislator-picture">
+                <img ng-src="http://theunitedstates.io/images/congress/225x275/{{ legislator.bioguide_id}}.jpg"/>
+            </div>
+            <div class="legislator-detail">
+                <div class="legislator-name">
+                    <a href="{{ legislator.website }}">{{ legislator.first_name }} {{ legislator.last_name }}</a>
+                </div>
+                <div class="legislator-social">
+                    <a class="social-icon" ng-show="{{ legislator.twitter_id != undefined }}" href="http://twitter.com/{{ legislator.twitter_id }}"><img src="/static/images/Twitter_logo_blue.png"/></a>
+                    <a class="social-icon" ng-show="{{ legislator.facebook_id != undefined }}" href="http://facebook.com/{{ legislator.facebook_id }}"><img src="/static/images/FB-f-Logo__blue_512.png"/></a>
+                </div>
+            </div>
         </div>
     </div>
+    <div id="footer">Information about Congress</div>
     
 {% endraw %}
 </body>
