@@ -6,40 +6,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>ConGrep</title>
-    <link type="text/css" rel="stylesheet" href="/static/css/app.css"/>
 
-    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/static/css/app.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
     
     {% include 'ga.script' %}
 </head>
-<body ng-app=congress_app ng-controller="congress_ctrl">
+<body ng-app=congress_app ng-controller="congress_ctrl" class="cg-top-spacing" ng-cloak>
 {% raw %}
 
-    <div id="search_header">ConGrep</div>
-    <form class="form-wrapper cf js-command-form" ng-submit="run_search()">
-        <input type="text" ng-model="search_criteria" placeholder="Seach by Zip Code..." required>
-        <button type="submit">Search</button>
-    </form>
+	<div class="container">
+	    <div class="row clearfix">
+	    </div>
+	    <div class="row clearfix">
+	        <div class="col-md-2 column">
+	            <img class="cg-profile-picture" alt="140x140" ng-src="http://theunitedstates.io/images/congress/225x275/{{ legislator.bioguide_id}}.jpg"> 
+	            <address class="cg-top-spacing"> 
+                <strong>{{legislator.first_name}} {{ legislator.last_name }}</strong><br> 
+                {{ legislator.office }}<br> 
+                {{ legislator.state_name }}<br> 
+                <abbr title="Phone">P:</abbr> {{ legislator.phone }}<br>
+                {{ legislator.term_start }} - {{ legislator.term_end }}<br> <br> 
+                <a ng-show="legislator.website != undefined" href="{{ legislator.website }}">Website</a><br>
+                <a ng-show="legislator.twitter_id != undefined" href="http://twitter.com/{{ legislator.twitter_id }}">Twitter</a><br>
+                <a ng-show="legislator.facebook_id != undefined" href="http://facebook.com/{{ legislator.facebook_id }}">Facebook</a><br>
  
-    <div id="search_results">
-        <div class="legislator" ng-repeat="legislator in legislators ">
-            <div class="legislator-picture">
-                <img ng-src="http://theunitedstates.io/images/congress/225x275/{{ legislator.bioguide_id}}.jpg"/>
-            </div>
-            <div class="legislator-detail">
-                <div class="legislator-name">
-                    <a href="{{ legislator.website }}">{{ legislator.first_name }} {{ legislator.last_name }}</a>
-                </div>
-                <div class="legislator-social">
-                    <a class="social-icon" ng-show="{{ legislator.twitter_id != undefined }}" href="http://twitter.com/{{ legislator.twitter_id }}"><img src="/static/images/Twitter_logo_blue.png"/></a>
-                    <a class="social-icon" ng-show="{{ legislator.facebook_id != undefined }}" href="http://facebook.com/{{ legislator.facebook_id }}"><img src="/static/images/FB-f-Logo__blue_512.png"/></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="footer">Information about Congress</div>
-    
+	            </address>
+	        </div>
+	        <div class="col-md-10 column">
+	            <h2>
+	                Top Donors
+	            </h2>
+	            <p>
+    	           Here are the top donors for {{legislator.first_name}} {{ legislator.last_name }}
+    	        </p>
+                <ul class="list-unstyled">
+                    <li ng-repeat="donor in top_donors ">
+                        {{ donor.name }} (${{ donor.total_amount}})
+                    </li>
+                </ul>
+                <h2>
+                    Top Phrases
+                </h2>
+                <p>
+                   Here are the top phrases used by {{legislator.first_name}} {{ legislator.last_name }}
+                </p>
+                <ul class="list-unstyled">
+                    <li ng-repeat="phrase in top_phrases ">
+                        {{ phrase.ngram }} ({{ phrase.count}})
+                    </li>
+                </ul>
+	        </div>
+	    </div>
+	</div> 
 {% endraw %}
 </body>
 
@@ -50,17 +74,48 @@
     
     var congress_app = angular.module('congress_app', []);
 
-    var congress_ctrl = function ($scope, $http) {
-        $scope.search_criteria = "";
-        $scope.legislators = [];
+    var congress_ctrl = function ($scope, $http, $window) {
+        $scope.search_criteria = "53202";
+        $scope.legislator = undefined;
+        $scope.top_donors = [];
+        $scope.top_phrases = [];
         
         $scope.run_search = function(){
             $http.get(sunlight_root + '/legislators/locate?apikey=' + sunlight_api_key + '&zip=' + $scope.search_criteria).then(
                 function(result){
-                    $scope.legislators = result.data.results;
+                	if(result && result.data && result.data.results){
+                		$scope.legislator = result.data.results[0];	
+                		$scope.get_top_donors($scope.legislator.bioguide_id);
+                		$scope.get_top_phrases($scope.legislator.bioguide_id);
+                	}
                 }
             );
         }
+
+        $scope.get_top_donors = function(bioguide_id){
+            $http.jsonp('http://transparencydata.org/api/1.0/entities/id_lookup.json?apikey=' + sunlight_api_key + '&bioguide_id=' + bioguide_id + '&callback=JSON_CALLBACK').success(
+            	function(data){
+	                var entity_id = data[0].id;
+	                
+	                $http.jsonp('http://transparencydata.com/api/1.0/aggregates/pol/' + entity_id + '/contributors.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').success(
+	                	function(data){
+	                		$scope.top_donors = data;
+	                	}
+	                );	
+	            }
+            );
+        }
+        
+        $scope.get_top_phrases = function(bioguide_id){     
+        	// Need to use jQuery JSONP because of this: https://github.com/angular/angular.js/issues/1551
+        	$.getJSON('http://capitolwords.org/api/1/phrases.json?entity_type=legislator&n=3&apikey=' + sunlight_api_key + '&entity_value=' + bioguide_id + '&callback=?',
+                function(data){
+                   $scope.top_phrases = data;
+                }
+            );
+        }
+        
+        $scope.run_search();
     };
 
     congress_app.controller('congress_ctrl', congress_ctrl);
