@@ -1,0 +1,73 @@
+<div class="row clearfix">
+    <div class="col-md-2 column">
+        <img class="cg-profile-picture" alt="140x140" ng-src="http://theunitedstates.io/images/congress/225x275/{{ legislator.bioguide_id}}.jpg"> 
+        <address class="cg-top-spacing"> 
+        <strong>{{legislator.first_name}} {{ legislator.last_name }}</strong><br> 
+        {{ legislator.office }}<br> 
+        {{ legislator.state_name }}<br> 
+        <abbr title="Phone">P:</abbr> {{ legislator.phone }}<br>
+        {{ legislator.term_start }} - {{ legislator.term_end }}<br> <br> 
+        <a ng-show="legislator.website != undefined" href="{{ legislator.website }}">Website</a><br>
+        <a ng-show="legislator.twitter_id != undefined" href="http://twitter.com/{{ legislator.twitter_id }}">Twitter</a><br>
+        <a ng-show="legislator.facebook_id != undefined" href="http://facebook.com/{{ legislator.facebook_id }}">Facebook</a><br>
+
+        </address>
+    </div>
+    <div class="col-md-10 column">
+        <h2>
+            Top Donors
+        </h2>
+        <p>
+           Here are the top donors for {{legislator.first_name}} {{ legislator.last_name }}
+        </p>
+        <ul class="list-unstyled">
+            <li ng-repeat="donor in top_donors ">
+                {{ donor.name }} (${{ donor.total_amount}})
+            </li>
+        </ul>
+        <h2>
+            Top Contributing Industries
+        </h2>
+        <p>
+           Here are the top contributing industries for {{legislator.first_name}} {{ legislator.last_name }}
+        </p>
+        <ul class="list-unstyled">
+            <li ng-repeat="industry in top_contributing_industries ">
+                {{ industry.name}} (${{ industry.amount}}, {{ industry.count}} donations)
+            </li>
+        </ul>
+         <h2>
+            Top Contributing Sectors
+        </h2>
+        <p>
+           Here are the top contributing sectors for {{legislator.first_name}} {{ legislator.last_name }}
+        </p>
+        <ul class="list-unstyled">
+            <li ng-repeat="sector in top_contributing_sectors ">
+                {{ get_sector_name(sector.sector)}} (${{ sector.amount}}, {{ sector.count}} donations)
+            </li>
+        </ul>
+         <h2>
+            Contribution Breakdown
+        </h2>
+        <p>
+           Here are the top contributors broken down by type for {{legislator.first_name}} {{ legislator.last_name }}
+        </p>
+        <ul class="list-unstyled">
+            <li ng-repeat="(key, value) in contribution_breakdown ">
+                {{ key }} (${{ value[1]}}, {{ value[0]}} donations)
+            </li>
+        </ul>
+        <h2>
+            Top Phrases
+        </h2>
+        <p>
+           Here are the top phrases used by {{legislator.first_name}} {{ legislator.last_name }}
+        </p>
+        <ul class="list-unstyled">
+            <li ng-repeat="phrase in top_phrases ">
+                {{ phrase.ngram }} ({{ phrase.count}})
+            </li>
+        </ul>
+    </div>
+</div>
