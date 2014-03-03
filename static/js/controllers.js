@@ -1,4 +1,4 @@
-var congress_ctrl = function ($scope, $http, $window, $q) {
+var congress_ctrl = function ($scope, $http, $window, $q, congress_service) {
     $scope.search_criteria = "48104";
     $scope.legislator = undefined;
     $scope.top_donors = [];
@@ -91,10 +91,10 @@ var congress_ctrl = function ($scope, $http, $window, $q) {
     };
     
     $scope.get_sector_name = function(sector){
-    	return SECTOR_LOOKUP[sector];
+    	return congress_service.get_sector(sector);
     }
 
     $scope.run_search();
 };
 
-congress_app.controller('congress_ctrl', ['$scope', '$http', '$window', '$q', congress_ctrl]);
+congress_app.controller('congress_ctrl', ['$scope', '$http', '$window', '$q', 'congress_service', congress_ctrl]);
