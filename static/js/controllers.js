@@ -1,4 +1,4 @@
-var congress_ctrl = function ($scope, $http, $window, $q, congress_service) {
+var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
     $scope.search_criteria = "48104";
     $scope.legislator = undefined;
     $scope.top_donors = [];
@@ -8,8 +8,9 @@ var congress_ctrl = function ($scope, $http, $window, $q, congress_service) {
     $scope.contribution_breakdown = {};
     $scope.independent_expenditures = [];
     
-    $scope.run_search = function(){
-        $http.get(sunlight_root + '/legislators/locate?apikey=' + sunlight_api_key + '&zip=' + $scope.search_criteria).then(
+ 
+    $scope.run_search = function(bioguide_id){
+        $http.get(sunlight_root + '/legislators?apikey=' + sunlight_api_key + '&bioguide_id=' + bioguide_id).then(
             function(result){
             	if(result && result.data && result.data.results){
             		$scope.legislator = result.data.results[0];	
@@ -94,7 +95,39 @@ var congress_ctrl = function ($scope, $http, $window, $q, congress_service) {
     	return congress_service.get_sector(sector);
     }
 
-    $scope.run_search();
+    $scope.run_search($routeParams.bioguide_id);
 };
 
-congress_app.controller('congress_ctrl', ['$scope', '$http', '$window', '$q', 'congress_service', congress_ctrl]);
+var congress_search_ctrl = function ($scope, $http, $window, $q, $location, congress_service) {
+	$scope.congress_search_text = "";
+	$scope.congress_search_error = undefined;
+	
+	$scope.search = function(){
+		var split_name = $scope.congress_search_text.split(" ");
+		
+		var query = "";
+		if(split_name.length == 2){
+			query = "first_name=" + split_name[0] + "&last_name=" + split_name[1];
+		} else {
+			query = "query=" + $scope.congress_search_text;
+		}
+		
+        $http.get(sunlight_root + '/legislators?' + query + '&apikey=' + sunlight_api_key).then(
+            function(result){
+            	if(result && result.data && result.data.results && result.data.results.length > 0){
+            		if(result.data.results.length > 1){
+            			$scope.congress_search_error = "More than one result found. Please be more specific";
+            		} else {
+            			var bioguide_id = result.data.results[0].bioguide_id;
+            			$location.path('congress/' + bioguide_id);
+            		}
+            	} else {
+            		$scope.congress_search_error = "No results found";
+            	}
+            }
+        );
+	};
+}
+
+congress_app.controller('congress_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', congress_detail_ctrl]);
+congress_app.controller('congress_search_ctrl', ['$scope', '$http', '$window', '$q', '$location', 'congress_service', congress_search_ctrl]);
