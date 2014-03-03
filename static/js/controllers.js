@@ -7,7 +7,6 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
     $scope.top_contributing_sectors = [];
     $scope.contribution_breakdown = {};
     $scope.independent_expenditures = [];
-    
  
     $scope.run_search = function(bioguide_id){
         $http.get(sunlight_root + '/legislators?apikey=' + sunlight_api_key + '&bioguide_id=' + bioguide_id).then(
@@ -17,30 +16,21 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
             		
                     $scope.get_top_phrases($scope.legislator.bioguide_id);    
                     
-            		$scope.set_entity_id($scope.legislator.bioguide_id).then(function(){
-                        $scope.get_top_donors();
-                        $scope.get_top_contributing_industries();
-                        $scope.get_top_contributing_sectors();
-                        $scope.get_contribution_breakdown();
-                        $scope.get_independent_expenditures();
-            		});
+                    congress_service.get_entity_id_from_bioguide_id($scope.legislator.bioguide_id).then(
+                		function(entity_id){
+                			$scope.legislator_entity_id = entity_id;
+	            			$scope.get_top_donors();
+	                        $scope.get_top_contributing_industries();
+	                        $scope.get_top_contributing_sectors();
+	                        $scope.get_contribution_breakdown();
+	                        $scope.get_independent_expenditures();
+                		}
+                    );
             	}
             }
         );
     }
-    
-    $scope.set_entity_id = function(bioguide_id){
-    	var deferred = $q.defer();
-    	
-        $http.jsonp('http://transparencydata.org/api/1.0/entities/id_lookup.json?apikey=' + sunlight_api_key + '&bioguide_id=' + bioguide_id + '&callback=JSON_CALLBACK').success(
-                function(data){
-                    $scope.legislator_entity_id = data[0].id;
-                    deferred.resolve();
-                }
-        );
-        return deferred.promise;
-    };
-
+  
     $scope.get_top_donors = function(){
         $http.jsonp('http://transparencydata.com/api/1.0/aggregates/pol/' + $scope.legislator_entity_id + '/contributors.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').success(
                 function(data){
