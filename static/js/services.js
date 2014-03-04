@@ -21,7 +21,7 @@ congress_service.service('congress_service', function($http, $q) {
         	"Z" : "Administrative Use"
     };
     var TRANSPARENCY_DATA_ROOT_URI = 'http://transparencydata.org/api/1.0/';
-	
+	var SUNLIGHT_ROOT_URI = 'https://congress.api.sunlightfoundation.com/';
 	
     this.get_sector = function(sector_id) {
         return SECTOR_LOOKUP[sector_id];
@@ -40,5 +40,46 @@ congress_service.service('congress_service', function($http, $q) {
         );
         return deferred.promise;
     };
-});
 
+    this.get_legislator_by_bioguide_id = function(bioguide_id){
+    	var deferred = $q.defer();
+    	
+        $http.get(SUNLIGHT_ROOT_URI + 'legislators?apikey=' + sunlight_api_key + '&bioguide_id=' + bioguide_id).then(
+        		function(data){
+                    deferred.resolve(data.data.results[0]);
+                },
+        		function(fail_reason){
+                	deferred.reject(fail_reason);
+        		}
+        );
+        return deferred.promise;
+    };
+    
+    this.get_top_donors_by_entity_id = function(entity_id){
+    	var deferred = $q.defer();
+
+        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').then(
+        		function(data){
+                    deferred.resolve(data.data);
+                },
+        		function(fail_reason){
+                	deferred.reject(fail_reason);
+        		}
+        );
+        return deferred.promise;
+    };    
+
+    this.get_top_contributing_industries_by_entity_id = function(entity_id){
+    	var deferred = $q.defer();
+
+        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors/industries.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').then(
+        		function(data){
+                    deferred.resolve(data.data);
+                },
+        		function(fail_reason){
+                	deferred.reject(fail_reason);
+        		}
+        );
+        return deferred.promise;
+    };      
+});

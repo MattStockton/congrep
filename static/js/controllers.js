@@ -1,5 +1,4 @@
 var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
-    $scope.search_criteria = "48104";
     $scope.legislator = undefined;
     $scope.top_donors = [];
     $scope.top_phrases = [];
@@ -9,33 +8,32 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
     $scope.independent_expenditures = [];
  
     $scope.run_search = function(bioguide_id){
-        $http.get(sunlight_root + '/legislators?apikey=' + sunlight_api_key + '&bioguide_id=' + bioguide_id).then(
-            function(result){
-            	if(result && result.data && result.data.results){
-            		$scope.legislator = result.data.results[0];	
-            		
-                    $scope.get_top_phrases($scope.legislator.bioguide_id);    
-                    
-                    congress_service.get_entity_id_from_bioguide_id($scope.legislator.bioguide_id).then(
-                		function(entity_id){
-                			$scope.legislator_entity_id = entity_id;
-	            			$scope.get_top_donors();
-	                        $scope.get_top_contributing_industries();
-	                        $scope.get_top_contributing_sectors();
-	                        $scope.get_contribution_breakdown();
-	                        $scope.get_independent_expenditures();
-                		}
-                    );
-            	}
+        congress_service.get_legislator_by_bioguide_id(bioguide_id).then(
+            function(legislator){
+        		$scope.legislator = legislator;
+        		
+                $scope.get_top_phrases(bioguide_id);    
+                
+                congress_service.get_entity_id_from_bioguide_id(bioguide_id).then(
+            		function(entity_id){
+            			$scope.legislator.entity_id = entity_id;
+            			
+            			$scope.get_top_donors(entity_id);
+                        $scope.get_top_contributing_industries(entity_id);
+                        $scope.get_top_contributing_sectors();
+                        $scope.get_contribution_breakdown();
+                        $scope.get_independent_expenditures();
+            		}
+                );
             }
         );
     }
   
-    $scope.get_top_donors = function(){
-        $http.jsonp('http://transparencydata.com/api/1.0/aggregates/pol/' + $scope.legislator_entity_id + '/contributors.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').success(
-                function(data){
-                    $scope.top_donors = data;
-                }
+    $scope.get_top_donors = function(entity_id){
+        congress_service.get_top_donors_by_entity_id(entity_id).then(
+            function(data){
+                $scope.top_donors = data;
+            }
         );  
     }
     
@@ -48,16 +46,16 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
         );
     };
 
-    $scope.get_top_contributing_industries = function(){     
-        $http.jsonp('http://transparencydata.com/api/1.0/aggregates/pol/' + $scope.legislator_entity_id + '/contributors/industries.json?apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').success(
+    $scope.get_top_contributing_industries = function(entity_id){     
+        congress_service.get_top_contributing_industries_by_entity_id(entity_id).then(
                 function(data){
-                    $scope.top_contributing_industries = data;
+                	$scope.top_contributing_industries = data;
                 }
         );  
     };
 
     $scope.get_top_contributing_sectors = function(){     
-        $http.jsonp('http://transparencydata.com/api/1.0/aggregates/pol/' + $scope.legislator_entity_id + '/contributors/sectors.json?apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').success(
+        $http.jsonp('http://transparencydata.com/api/1.0/aggregates/pol/' + $scope.legislator.entity_id + '/contributors/sectors.json?apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').success(
                 function(data){
                     $scope.top_contributing_sectors = data;
                 }
@@ -65,7 +63,7 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
     };
 
     $scope.get_contribution_breakdown = function(){     
-        $http.jsonp('http://transparencydata.com/api/1.0/aggregates/pol/' + $scope.legislator_entity_id + '/contributors/type_breakdown.json?apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').success(
+        $http.jsonp('http://transparencydata.com/api/1.0/aggregates/pol/' + $scope.legislator.entity_id + '/contributors/type_breakdown.json?apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').success(
                 function(data){
                     $scope.contribution_breakdown = data;
                 }
@@ -74,7 +72,7 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
 
     // TODO - Doesn't appear to be returning anything. Need to look into this
     $scope.get_independent_expenditures = function(){     
-        $http.jsonp('http://transparencydata.com/api/1.0/aggregates/pol/' + $scope.legislator_entity_id + '/fec_indexp.json?apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').success(
+        $http.jsonp('http://transparencydata.com/api/1.0/aggregates/pol/' + $scope.legislator.entity_id + '/fec_indexp.json?apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').success(
                 function(data){
                     $scope.independent_expenditures = data;
                 }
