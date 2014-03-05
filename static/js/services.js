@@ -142,4 +142,31 @@ congress_service.service('congress_service', function($http, $q) {
         );
         return deferred.promise;
     };       
+    
+    this.search_for_legislators = function(search_text){
+        var deferred = $q.defer();
+        var split_name = search_text.split(" ");
+        
+        var query = "";
+        if(split_name.length == 2){
+            query = "first_name=" + split_name[0] + "&last_name=" + split_name[1];
+        } else {
+            query = "query=" + search_text;
+        }
+        
+        $http.get(SUNLIGHT_ROOT_URI + 'legislators?' + query + '&apikey=' + sunlight_api_key).then(
+            function(result){
+                if(result && result.data && result.data.results){
+                    return deferred.resolve(result.data.results);
+                } else {
+                    return deferred.resolve([]);
+                }
+            }, 
+            function(fail_reason){
+                deferred.resolve([]); // Just resolve with empty for now. Going to change search interface anyway
+            }
+        );
+        
+        return deferred.promise;
+    };     
 });

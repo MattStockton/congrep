@@ -76,7 +76,7 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
             }
         );  
     };
-    
+            
     $scope.get_sector_name = function(sector){
         return congress_service.get_sector(sector);
     }
@@ -89,29 +89,19 @@ var congress_search_ctrl = function ($scope, $http, $window, $q, $location, cong
     $scope.congress_search_error = undefined;
     
     $scope.search = function(){
-        var split_name = $scope.congress_search_text.split(" ");
-        
-        var query = "";
-        if(split_name.length == 2){
-            query = "first_name=" + split_name[0] + "&last_name=" + split_name[1];
-        } else {
-            query = "query=" + $scope.congress_search_text;
-        }
-        
-        $http.get(sunlight_root + '/legislators?' + query + '&apikey=' + sunlight_api_key).then(
-            function(result){
-                if(result && result.data && result.data.results && result.data.results.length > 0){
-                    if(result.data.results.length > 1){
-                        $scope.congress_search_error = "More than one result found. Please be more specific";
-                    } else {
-                        var bioguide_id = result.data.results[0].bioguide_id;
-                        $location.path('congress/' + bioguide_id);
-                    }
+        congress_service.search_for_legislators($scope.congress_search_text).then(
+            function(legislators){
+                if(legislators.length == 1){
+                    var bioguide_id = legislators[0].bioguide_id;
+                    $location.path('congress/' + bioguide_id);
+                    return;
+                } else if(legislators.length > 1){
+                    $scope.congress_search_error = "More than one result found. Please be more specific";
                 } else {
                     $scope.congress_search_error = "No results found";
                 }
             }
-        );
+        );  
     };
 }
 
