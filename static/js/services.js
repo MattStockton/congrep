@@ -144,24 +144,29 @@ congress_service.service('congress_service', function($http, $q) {
     };       
     
     this.search_for_legislators = function(search_text){
-        var deferred = $q.defer();
+        
+        var promises = [];
         var split_name = search_text.split(" ");
-        
-        var query = "";
         if(split_name.length == 2){
-            query = "first_name=" + split_name[0] + "&last_name=" + split_name[1];
-        } else {
-            query = "query=" + search_text;
-        }
+            var query = "first_name=" + split_name[0] + "&last_name=" + split_name[1];
+            promises.push($http.get(SUNLIGHT_ROOT_URI + 'legislators?' + query + '&apikey=' + sunlight_api_key));
+         } 
         
-        $http.get(SUNLIGHT_ROOT_URI + 'legislators?' + query + '&apikey=' + sunlight_api_key).then(
-            function(result){
-                if(result && result.data && result.data.results){
-                    return deferred.resolve(result.data.results);
-                } else {
-                    return deferred.resolve([]);
+        var query = "query=" + search_text;
+        promises.push($http.get(SUNLIGHT_ROOT_URI + 'legislators?' + query + '&apikey=' + sunlight_api_key));
+       
+        var deferred = $q.defer();
+        
+        $q.all(promises).then(
+            function(results){
+                var combined_results = [];
+                for(var i = 0; i < results.length; i++){
+                    if(results[i].data && results[i].data.results){
+                        combined_results = combined_results.concat(results[i].data.results);
+                    }
                 }
-            }, 
+                return deferred.resolve(combined_results);
+            },
             function(fail_reason){
                 deferred.resolve([]); // Just resolve with empty for now. Going to change search interface anyway
             }
