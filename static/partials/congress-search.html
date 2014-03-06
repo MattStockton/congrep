@@ -14,6 +14,14 @@
                 </div>
             </div>
         </form>
+        <div ng-show="legislator_search_results.length > 0">
+            <div class="list-group">
+                <div ng-repeat="legislator in legislator_search_results" ng-click="go_to(legislator)" class="list-group-item">
+                   {{legislator.first_name}} {{ legislator.last_name }}
+                </div>
+            </div>
+        </div>
+
         <h3 ng-show="congress_search_error != undefined" class="text-danger">
             {{ congress_search_error }}
         </h3>
