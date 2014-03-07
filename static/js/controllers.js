@@ -9,6 +9,7 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
     $scope.committees = [];
     $scope.bills_sponsored = [];
     $scope.votes = [];
+    $scope.events = [];
     
     $scope.run_search = function(bioguide_id){
         congress_service.get_legislator_by_bioguide_id(bioguide_id).then(
@@ -19,6 +20,7 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
                 $scope.get_committees(bioguide_id); 
                 $scope.get_bills_sponsored(bioguide_id);
                 $scope.get_votes(bioguide_id);
+                $scope.get_events(legislator.crp_id);
                 
                 congress_service.get_entity_id_from_bioguide_id(bioguide_id).then(
                     function(entity_id){
@@ -106,7 +108,15 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
             }
         );  
     };
-            
+ 
+    $scope.get_events = function(crp_id){  
+        congress_service.get_events_by_crp_id(crp_id).then(
+            function(data){
+                $scope.events = data;
+            }
+        );  
+    };    
+    
     $scope.get_sector_name = function(sector){
         return congress_service.get_sector(sector);
     }

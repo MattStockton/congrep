@@ -23,6 +23,7 @@ congress_service.service('congress_service', function($http, $q) {
     var TRANSPARENCY_DATA_ROOT_URI = 'http://transparencydata.org/api/1.0/';
     var SUNLIGHT_ROOT_URI = 'https://congress.api.sunlightfoundation.com/';
     var CAPITOL_WORDS_ROOT_URI = 'http://capitolwords.org/api/1/';
+    var PARTY_TIME_ROOT_URI = 'http://politicalpartytime.org/api/v1/';
     
     this.get_sector = function(sector_id) {
         return SECTOR_LOOKUP[sector_id];
@@ -184,8 +185,24 @@ congress_service.service('congress_service', function($http, $q) {
             }
         );
         return deferred.promise;
-    };     
-    
+    };
+
+    this.get_events_by_crp_id = function(crp_id){
+        var deferred = $q.defer();
+        
+        // Need to use jQuery JSONP because of this: https://github.com/angular/angular.js/issues/1551
+        $http.jsonp(PARTY_TIME_ROOT_URI + 'event/?apikey=' + sunlight_api_key + 
+            '&format=jsonp&beneficiaries__crp_id=' + crp_id + '&callback=JSON_CALLBACK').then(
+            function(data){
+                deferred.resolve(data.data.objects);
+            },
+            function(fail_reason){
+                deferred.reject(fail_reason);
+            }
+        );
+        return deferred.promise;
+    };
+
     this.search_for_legislators = function(search_text){
         
         var promises = [];
