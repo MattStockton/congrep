@@ -1,4 +1,4 @@
-var congress_app = angular.module('congress_app', ['ngRoute', 'congress_service']).
+var congress_app = angular.module('congress_app', ['ngRoute', 'congress_service', 'ui.bootstrap']).
   config(['$routeProvider', function($routeProvider) {
   $routeProvider.
       when('/search', {templateUrl: '/static/partials/congress-search.html',   controller: 'congress_search_ctrl'}).

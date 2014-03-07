@@ -6,13 +6,19 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
     $scope.top_contributing_sectors = [];
     $scope.contribution_breakdown = {};
     $scope.independent_expenditures = [];
- 
+    $scope.committees = [];
+    $scope.bills_sponsored = [];
+    $scope.votes = [];
+    
     $scope.run_search = function(bioguide_id){
         congress_service.get_legislator_by_bioguide_id(bioguide_id).then(
             function(legislator){
                 $scope.legislator = legislator;
                 
-                $scope.get_top_phrases(bioguide_id);    
+                $scope.get_top_phrases(bioguide_id);   
+                $scope.get_committees(bioguide_id); 
+                $scope.get_bills_sponsored(bioguide_id);
+                $scope.get_votes(bioguide_id);
                 
                 congress_service.get_entity_id_from_bioguide_id(bioguide_id).then(
                     function(entity_id){
@@ -44,7 +50,31 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
             }
         );  
     };
+    
+    $scope.get_committees = function(bioguide_id){
+        congress_service.get_committees_by_bioguide_id(bioguide_id).then(
+            function(data){
+                $scope.committees = data;
+            }
+        );  
+    };
 
+    $scope.get_bills_sponsored = function(bioguide_id){
+        congress_service.get_bills_sponsored_by_bioguide_id(bioguide_id).then(
+            function(data){
+                $scope.bills_sponsored = data;
+            }
+        );  
+    };
+
+    $scope.get_votes = function(bioguide_id){
+        congress_service.get_votes_by_bioguide_id(bioguide_id).then(
+            function(data){
+                $scope.votes = data;
+            }
+        );  
+    };
+    
     $scope.get_top_contributing_industries = function(entity_id){     
         congress_service.get_top_contributing_industries_by_entity_id(entity_id).then(
             function(data){

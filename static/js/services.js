@@ -143,6 +143,49 @@ congress_service.service('congress_service', function($http, $q) {
         return deferred.promise;
     };       
     
+    this.get_committees_by_bioguide_id = function(bioguide_id){
+        var deferred = $q.defer();
+        
+        $http.get(SUNLIGHT_ROOT_URI + 'committees?apikey=' + sunlight_api_key + '&member_ids=' + bioguide_id).then(
+            function(data){
+                deferred.resolve(data.data.results);
+            },
+            function(fail_reason){
+                deferred.reject(fail_reason);
+            }
+        );
+        return deferred.promise;
+    };
+    
+    this.get_bills_sponsored_by_bioguide_id = function(bioguide_id){
+        var deferred = $q.defer();
+        
+        $http.get(SUNLIGHT_ROOT_URI + 'bills?apikey=' + sunlight_api_key + '&sponsor_id=' + bioguide_id + '&order=last_action_at').then(
+            function(data){
+                deferred.resolve(data.data.results);
+            },
+            function(fail_reason){
+                deferred.reject(fail_reason);
+            }
+        );
+        return deferred.promise;
+    };   
+
+    this.get_votes_by_bioguide_id = function(bioguide_id){
+        var deferred = $q.defer();
+        
+        $http.get(SUNLIGHT_ROOT_URI + 'votes?apikey=' + sunlight_api_key + '&voter_ids.' + bioguide_id 
+            + '__exists=true&order=voted_at&fields=voted_at,question,result,bill,breakdown,voters.' + bioguide_id).then(
+            function(data){
+                deferred.resolve(data.data.results);
+            },
+            function(fail_reason){
+                deferred.reject(fail_reason);
+            }
+        );
+        return deferred.promise;
+    };     
+    
     this.search_for_legislators = function(search_text){
         
         var promises = [];
