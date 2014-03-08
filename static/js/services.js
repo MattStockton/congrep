@@ -179,9 +179,9 @@ congress_service.service('congress_service', function($http, $q) {
             + '__exists=true&order=voted_at&vote_type=passage&per_page=50&fields=voted_at,question,result,bill,breakdown,voters.' + bioguide_id).then(
             function(data){
                 deferred.resolve(_.map(data.data.results, 
-                	function(cur){
-                		return new Vote(cur);
-                	}
+                    function(cur){
+                        return new Vote(cur);
+                    }
                 ));
             },
             function(fail_reason){

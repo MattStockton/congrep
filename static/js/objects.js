@@ -7,14 +7,14 @@ Vote.prototype.get_vote_for = function(bioguide_id) {
 }
 
 Vote.prototype.get_democrat_votes = function(){
-	return this.breakdown.party.D;
+    return this.breakdown.party.D;
 }
 
 Vote.prototype.get_republican_votes = function(){
-	return this.breakdown.party.R;
+    return this.breakdown.party.R;
 }
 
 Vote.prototype.get_total_votes = function(){
-	return this.breakdown.total;
+    return this.breakdown.total;
 }
 

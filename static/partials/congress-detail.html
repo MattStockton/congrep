@@ -66,8 +66,36 @@
                         <p class="list-group-item-text"><strong>Motion:</strong> {{ vote.question }}</p>
                         <p class="list-group-item-text"><strong>Result:</strong> {{ vote.result }}</p>
                         <p class="list-group-item-text"><strong>Legislator's Vote:</strong> {{ vote.get_vote_for(legislator.bioguide_id) }}</p>
-                        <p class="list-group-item-text"><strong>Total Vote:</strong> {{ vote.get_total_votes() }}</p>
-                        <p class="list-group-item-text"><strong>Date:</strong> {{ vote.voted_at }}</p>
+                        <p class="list-group-item-text"><strong>Date:</strong> {{ vote.voted_at }}</p><br>
+                        <div class="list-group-item row cg-no-border">
+                            <div class="col-md-4 column">
+                                <span class="label label-default">Democratic Votes</span>
+                                <div class="list-group">
+                                  <div ng-repeat="(vote_type, num_votes) in vote.get_democrat_votes()" class="list-group-item">
+                                    <span class="badge">{{ num_votes }}</span>
+                                    {{ vote_type }}
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 column">
+                                <span class="label label-default">Republican Votes</span>
+                                <div class="list-group">
+                                  <div ng-repeat="(vote_type, num_votes) in vote.get_republican_votes()" class="list-group-item">
+                                    <span class="badge">{{ num_votes }}</span>
+                                    {{ vote_type }}
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 column">
+                                <span class="label label-default">Total Votes</span>
+                                <div class="list-group">
+                                  <div ng-repeat="(vote_type, num_votes) in vote.get_total_votes()" class="list-group-item">
+                                    <span class="badge">{{ num_votes }}</span>
+                                    {{ vote_type }}
+                                  </div>
+                                </div>
+                            </div>
+                        </div>    
                    </div>
                 </div>
             </tab>

@@ -6,6 +6,10 @@
     width: 140px;
 }
 
+.cg-no-border {
+    border: none;
+}
+
 .tab-pane {
     margin-top: 20px;
 }
