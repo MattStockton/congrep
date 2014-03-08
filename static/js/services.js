@@ -176,9 +176,13 @@ congress_service.service('congress_service', function($http, $q) {
         var deferred = $q.defer();
         
         $http.get(SUNLIGHT_ROOT_URI + 'votes?apikey=' + sunlight_api_key + '&voter_ids.' + bioguide_id 
-            + '__exists=true&order=voted_at&fields=voted_at,question,result,bill,breakdown,voters.' + bioguide_id).then(
+            + '__exists=true&order=voted_at&vote_type=passage&per_page=50&fields=voted_at,question,result,bill,breakdown,voters.' + bioguide_id).then(
             function(data){
-                deferred.resolve(data.data.results);
+                deferred.resolve(_.map(data.data.results, 
+                	function(cur){
+                		return new Vote(cur);
+                	}
+                ));
             },
             function(fail_reason){
                 deferred.reject(fail_reason);

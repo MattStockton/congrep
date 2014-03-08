@@ -65,7 +65,9 @@
                         <p ng-show="vote.bill" class="list-group-item-text"><a href="{{ bill.urls.opencongress }}" target="_blank">Read the bill</a></p><br>
                         <p class="list-group-item-text"><strong>Motion:</strong> {{ vote.question }}</p>
                         <p class="list-group-item-text"><strong>Result:</strong> {{ vote.result }}</p>
-                        <p class="list-group-item-text"><strong>Legislator's Vote:</strong> {{ vote.voters[legislator.bioguide_id].vote }}</p>
+                        <p class="list-group-item-text"><strong>Legislator's Vote:</strong> {{ vote.get_vote_for(legislator.bioguide_id) }}</p>
+                        <p class="list-group-item-text"><strong>Total Vote:</strong> {{ vote.get_total_votes() }}</p>
+                        <p class="list-group-item-text"><strong>Date:</strong> {{ vote.voted_at }}</p>
                    </div>
                 </div>
             </tab>
