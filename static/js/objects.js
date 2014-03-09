@@ -18,3 +18,15 @@ Vote.prototype.get_total_votes = function(){
     return this.breakdown.total;
 }
 
+Vote.prototype.has_bill_sponsor = function(){
+    return this.bill && this.bill.sponsor;
+}
+
+Vote.prototype.get_sponsor_full_name = function(){
+    return this.has_bill_sponsor() ? this.bill.sponsor.first_name + ' ' + this.bill.sponsor.last_name : "";
+}
+
+Vote.prototype.get_sponsor_bioguide_id = function(){
+    return this.has_bill_sponsor() ? this.bill.sponsor_id : undefined;
+}
+

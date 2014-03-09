@@ -1,17 +1,21 @@
 var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
-    $scope.legislator = undefined;
-    $scope.top_donors = [];
-    $scope.top_phrases = [];
-    $scope.top_contributing_industries = [];
-    $scope.top_contributing_sectors = [];
-    $scope.contribution_breakdown = {};
-    $scope.independent_expenditures = [];
-    $scope.committees = [];
-    $scope.bills_sponsored = [];
-    $scope.votes = [];
-    $scope.events = [];
+
+    $scope.reset = function(){
+        $scope.legislator = undefined;
+        $scope.top_donors = [];
+        $scope.top_phrases = [];
+        $scope.top_contributing_industries = [];
+        $scope.top_contributing_sectors = [];
+        $scope.contribution_breakdown = {};
+        $scope.independent_expenditures = [];
+        $scope.committees = [];
+        $scope.bills_sponsored = [];
+        $scope.votes = [];
+        $scope.events = [];       
+    }
     
     $scope.run_search = function(bioguide_id){
+        $scope.reset();
         congress_service.get_legislator_by_bioguide_id(bioguide_id).then(
             function(legislator){
                 $scope.legislator = legislator;
@@ -120,6 +124,10 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
     $scope.get_sector_name = function(sector){
         return congress_service.get_sector(sector);
     }
+    
+    $scope.go_to_legislator = function(bioguide_id){
+        $location.path( 'congress/' + bioguide_id);
+    };
 
     $scope.run_search($routeParams.bioguide_id);
 };
