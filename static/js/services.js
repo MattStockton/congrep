@@ -240,8 +240,8 @@ congress_service.service('congress_service', function($http, $q) {
     };
     
     this.search_for_organizations = function(search_term){
-    	var deferred = $q.defer();
-    	search_tearm = encodeURIComponent(search_term);
+        var deferred = $q.defer();
+        search_tearm = encodeURIComponent(search_term);
         $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'entities.json?apikey=' + sunlight_api_key + '&search=' + search_tearm + '&type=organization&callback=JSON_CALLBACK').then(
             function(data){
                 deferred.resolve(data.data);
@@ -253,10 +253,23 @@ congress_service.service('congress_service', function($http, $q) {
         return deferred.promise;
     }
     
-    this.get_top_donor_recipients_for_organization_entity_id = function(entity_id){
+    this.get_organization_by_entity_id = function(entity_id){
+        var deferred = $q.defer();
+        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'entities/' + entity_id + '.json?apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').then(
+            function(data){
+                deferred.resolve(new Organization(data.data));
+            },
+            function(fail_reason){
+                deferred.reject(fail_reason);
+            }
+        );
+        return deferred.promise;
+    }
+    
+    this._get_recipients_for_organization_entity_id = function(entity_id, type){
         var deferred = $q.defer();
 
-        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/recipients.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').then(
+        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/' + type + '.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').then(
             function(data){
                 deferred.resolve(data.data);
             },
@@ -264,6 +277,14 @@ congress_service.service('congress_service', function($http, $q) {
                 deferred.reject(fail_reason);
             }
         );
-        return deferred.promise;
-    };        
+        return deferred.promise;        
+    }
+    
+    this.get_top_recipients_for_organization_entity_id = function(entity_id){
+        return this._get_recipients_for_organization_entity_id(entity_id, 'recipients');
+    };
+    
+    this.get_top_pac_recipients_for_organization_entity_id = function(entity_id){
+        return this._get_recipients_for_organization_entity_id(entity_id, 'recipient_pacs');
+    };   
 });

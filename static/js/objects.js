@@ -30,3 +30,23 @@ Vote.prototype.get_sponsor_bioguide_id = function(){
     return this.has_bill_sponsor() ? this.bill.sponsor_id : undefined;
 }
 
+
+function Organization(data) {
+    _.extend(this, data);
+}
+
+Organization.prototype.get_bio_url = function(){
+    return this.metadata.bio_url;
+}
+
+Organization.prototype.get_bio_url = function(){
+    return this.metadata.bio_url;
+}
+
+Organization.prototype.get_photo_url = function(){
+    return this.metadata.photo_url;
+}
+
+Organization.prototype.get_name = function(){
+    return this.name;
+}

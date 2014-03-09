@@ -130,7 +130,7 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
     };
     
     $scope.go_to_donor = function(donor){
-    	$location.path('organization/' + donor.id);
+        $location.path('organization/' + donor.id);
     };
 
     $scope.run_search($routeParams.bioguide_id);
@@ -178,12 +178,56 @@ var congress_search_ctrl = function ($scope, $http, $window, $q, $location, cong
     };
     
     $scope.go_to_organization = function(organization){
-    	$location.path('organization/' + organization.id);
+        $location.path('organization/' + organization.id);
     };
 }
 
 var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
-	
+
+    $scope.reset = function(){
+        $scope.organization = undefined;
+        $scope.top_recipients = [];
+        $scope.top_pac_recipients = [];
+    }
+    
+    $scope.run_search = function(entity_id){
+        $scope.reset();
+        
+        congress_service.get_organization_by_entity_id(entity_id).then(
+            function(organization){
+                $scope.organization = organization;
+            }
+        );  
+        
+        $scope.get_top_recipients(entity_id);   
+        $scope.get_top_pac_recipients(entity_id); 
+    }
+    
+    $scope.get_top_recipients = function(entity_id){
+        congress_service.get_top_recipients_for_organization_entity_id(entity_id).then(
+            function(data){
+                $scope.top_recipients = data;
+            }
+        );  
+    }
+
+    $scope.get_top_pac_recipients = function(entity_id){
+        congress_service.get_top_pac_recipients_for_organization_entity_id(entity_id).then(
+            function(data){
+                $scope.top_pac_recipients = data;
+            }
+        );  
+    }
+    
+    $scope.go_to_recipient = function(recipient){
+        alert("Go to recipient");
+    }
+ 
+    $scope.go_to_pac_recipient = function(recipient){
+        alert("Go to PAC recipient");
+    }    
+
+    $scope.run_search($routeParams.entity_id);
 }
 
 

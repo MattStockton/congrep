@@ -1,8 +1,42 @@
 <div class="row clearfix">
     <div class="col-md-2 column">
-        Hello World
+        <img ng-show="organization.get_photo_url() != undefined" class="cg-profile-picture" alt="140x140" ng-src="{{ organization.get_photo_url() }}"/> 
+        <address class="cg-top-spacing"> 
+        <strong>{{organization.get_name()}}</strong><br>
+        <a ng-show="organization.get_bio_url() != undefined" href="{{ organization.get_bio_url() }}" target="_blank">Organization Bio</a><br>
+        </address>
     </div>
     <div class="col-md-10 column">
-        Hello World
+        <tabset>
+            <tab heading="Top Recipients">
+                <h4><span class="label label-primary">Top Recipients</span></h4>
+                <ul class="list-group">
+                    <li ng-repeat="recipient in top_recipients" class="list-group-item">
+                        <a ng-click="go_to_recipient(recipient)">{{ recipient.name }}</a> - ${{recipient.total_amount}} total, ${{recipient.direct_amount}} by organization 
+                    </li>
+                </ul>
+                <h4><span class="label label-primary">Top PAC Recipients</span></h4>
+                <ul class="list-group">
+                    <li ng-repeat="pac_recipient in top_pac_recipients" class="list-group-item">
+                        <a ng-click="go_to_pac_recipient(pac_recipient)">{{ pac_recipient.name }}</a> - ${{pac_recipient.total_amount}} total, ${{pac_recipient.direct_amount}} by organization
+                    </li>
+                </ul>
+            </tab>
+            <tab heading="Recipient Breakdown">
+                <h4><span class="label label-primary">Recipients by Party</span></h4>
+                <h4><span class="label label-primary">State / Federal Breakdown</span></h4>
+            </tab>
+            <tab heading="Lobbying">
+                <h4><span class="label label-primary">Firms Hired</span></h4>
+                <h4><span class="label label-primary">Individuals Hired</span></h4>
+                <h4><span class="label label-primary">Lobbying Issues</span></h4>
+            </tab>
+            <tab heading="Lobbied Bills">
+                <h4><span class="label label-primary">Lobbied on the following bills</span></h4>
+            </tab> 
+            <tab heading="Dockets">
+                <h4><span class="label label-primary">Dockets mentioning this organization</span></h4>
+            </tab>
+        </tabset>
     </div>
 </div>
