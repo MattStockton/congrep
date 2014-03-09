@@ -29,60 +29,64 @@ congress_service.service('congress_service', function($http, $q) {
         return SECTOR_LOOKUP[sector_id];
     };
     
-    this.get_entity_id_from_bioguide_id = function(bioguide_id){
-        var deferred = $q.defer();
+    this._angular_web_request = function(endpoint, data_conversion_function, http_function){
+        endpoint = endpoint + 'apikey=' + sunlight_api_key;
         
-        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'entities/id_lookup.json?apikey=' + sunlight_api_key + '&bioguide_id=' + bioguide_id + '&callback=JSON_CALLBACK').then(
+        if(http_function == $http.jsonp){
+            endpoint = endpoint + '&callback=JSON_CALLBACK';
+        }
+        
+        var deferred = $q.defer();
+        http_function(endpoint).then(
             function(data){
-                deferred.resolve(data.data[0].id);
+                return deferred.resolve(data_conversion_function(data));
             },
             function(fail_reason){
                 deferred.reject(fail_reason);
             }
         );
-        return deferred.promise;
+        return deferred.promise;        
+    }
+    
+    this._jsonp_request = function(endpoint, data_conversion_function){
+        return this._angular_web_request(endpoint, data_conversion_function, $http.jsonp);
+    }
+
+    this._get_request = function(endpoint, data_conversion_function){
+        return this._angular_web_request(endpoint, data_conversion_function, $http.get);
+    }
+    
+    
+    this.get_entity_id_from_bioguide_id = function(bioguide_id){
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'entities/id_lookup.json?bioguide_id=' + bioguide_id + '&';       
+        return this._jsonp_request(endpoint, 
+            function(data){
+                return data.data[0].id;
+            });
     };
 
     this.get_legislator_by_bioguide_id = function(bioguide_id){
-        var deferred = $q.defer();
-        
-        $http.get(SUNLIGHT_ROOT_URI + 'legislators?apikey=' + sunlight_api_key + '&bioguide_id=' + bioguide_id).then(
+        var endpoint = SUNLIGHT_ROOT_URI + 'legislators?bioguide_id=' + bioguide_id + '&';   
+        return this._get_request(endpoint, 
             function(data){
-                deferred.resolve(data.data.results[0]);
-            },
-            function(fail_reason){
-                deferred.reject(fail_reason);
-            }
-        );
-        return deferred.promise;
+                return data.data.results[0];
+            });
     };
     
     this.get_top_donors_by_entity_id = function(entity_id){
-        var deferred = $q.defer();
-
-        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').then(
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors.json?';
+        return this._jsonp_request(endpoint, 
             function(data){
-                deferred.resolve(data.data);
-            },
-            function(fail_reason){
-                deferred.reject(fail_reason);
-            }
-        );
-        return deferred.promise;
+                return data.data;
+            });
     };    
 
     this.get_top_contributing_industries_by_entity_id = function(entity_id){
-        var deferred = $q.defer();
-
-        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors/industries.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').then(
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors/industries.json?';
+        return this._jsonp_request(endpoint, 
             function(data){
-                deferred.resolve(data.data);
-            },
-            function(fail_reason){
-                deferred.reject(fail_reason);
-            }
-        );
-        return deferred.promise;
+                return data.data;
+            });
     };    
     
     this.get_top_phrases_by_bioguide_id = function(bioguide_id){
@@ -102,109 +106,66 @@ congress_service.service('congress_service', function($http, $q) {
     };      
     
     this.get_top_contributing_sectors_by_entity_id = function(entity_id){
-        var deferred = $q.defer();
-
-        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors/sectors.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').then(
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors/sectors.json?';
+        return this._jsonp_request(endpoint, 
             function(data){
-                deferred.resolve(data.data);
-            },
-            function(fail_reason){
-                deferred.reject(fail_reason);
-            }
-        );
-        return deferred.promise;
+                return data.data;
+            });
     };    
 
     this.get_contribution_breakdown_by_entity_id = function(entity_id){
-        var deferred = $q.defer();
-
-        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors/type_breakdown.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').then(
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors/type_breakdown.json?';
+        return this._jsonp_request(endpoint, 
             function(data){
-                deferred.resolve(data.data);
-            },
-            function(fail_reason){
-                deferred.reject(fail_reason);
-            }
-        );
-        return deferred.promise;
-    };    
+                return data.data;
+            });
+   };    
     
     this.get_independent_expenditures_by_entity_id = function(entity_id){
-        var deferred = $q.defer();
-
         // TODO - Doesn't appear to be returning anything. Need to look into this
-        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/fec_indexp.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').then(
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/fec_indexp.json?';
+        return this._jsonp_request(endpoint, 
             function(data){
-                deferred.resolve(data.data);
-            },
-            function(fail_reason){
-                deferred.reject(fail_reason);
-            }
-        );
-        return deferred.promise;
-    };       
+                return data.data;
+            });
+   };       
     
     this.get_committees_by_bioguide_id = function(bioguide_id){
-        var deferred = $q.defer();
-        
-        $http.get(SUNLIGHT_ROOT_URI + 'committees?apikey=' + sunlight_api_key + '&member_ids=' + bioguide_id).then(
+        var endpoint = SUNLIGHT_ROOT_URI + 'committees?member_ids=' + bioguide_id + '&';
+        return this._get_request(endpoint, 
             function(data){
-                deferred.resolve(data.data.results);
-            },
-            function(fail_reason){
-                deferred.reject(fail_reason);
-            }
-        );
-        return deferred.promise;
+                return data.data.results;
+            });
     };
     
     this.get_bills_sponsored_by_bioguide_id = function(bioguide_id){
-        var deferred = $q.defer();
-        
-        $http.get(SUNLIGHT_ROOT_URI + 'bills?apikey=' + sunlight_api_key + '&sponsor_id=' + bioguide_id + '&order=last_action_at').then(
+        var endpoint = SUNLIGHT_ROOT_URI + 'bills?sponsor_id=' + bioguide_id + '&order=last_action_at&';
+        return this._get_request(endpoint, 
             function(data){
-                deferred.resolve(data.data.results);
-            },
-            function(fail_reason){
-                deferred.reject(fail_reason);
-            }
-        );
-        return deferred.promise;
+                return data.data.results;
+            });
     };   
 
     this.get_votes_by_bioguide_id = function(bioguide_id){
-        var deferred = $q.defer();
-        
-        $http.get(SUNLIGHT_ROOT_URI + 'votes?apikey=' + sunlight_api_key + '&voter_ids.' + bioguide_id 
-            + '__exists=true&order=voted_at&vote_type=passage&per_page=50&fields=voted_at,question,result,bill,breakdown,voters.' + bioguide_id).then(
+        var endpoint = SUNLIGHT_ROOT_URI + 'votes?voter_ids.' + bioguide_id +
+          '__exists=true&order=voted_at&vote_type=passage&per_page=50&' +
+          'fields=voted_at,question,result,bill,breakdown,voters.' + bioguide_id + '&';
+          
+        return this._get_request(endpoint, 
             function(data){
-                deferred.resolve(_.map(data.data.results, 
+                return _.map(data.data.results, 
                     function(cur){
                         return new Vote(cur);
-                    }
-                ));
-            },
-            function(fail_reason){
-                deferred.reject(fail_reason);
-            }
-        );
-        return deferred.promise;
+                    });        
+            });
     };
 
     this.get_events_by_crp_id = function(crp_id){
-        var deferred = $q.defer();
-        
-        // Need to use jQuery JSONP because of this: https://github.com/angular/angular.js/issues/1551
-        $http.jsonp(PARTY_TIME_ROOT_URI + 'event/?apikey=' + sunlight_api_key + 
-            '&format=jsonp&beneficiaries__crp_id=' + crp_id + '&callback=JSON_CALLBACK').then(
+        var endpoint = PARTY_TIME_ROOT_URI + 'event?format=jsonp&beneficiaries__crp_id=' + crp_id + '&';
+        return this._jsonp_request(endpoint, 
             function(data){
-                deferred.resolve(data.data.objects);
-            },
-            function(fail_reason){
-                deferred.reject(fail_reason);
-            }
-        );
-        return deferred.promise;
+                return data.data.objects;
+            });
     };
 
     this.search_for_legislators = function(search_text){
@@ -240,44 +201,29 @@ congress_service.service('congress_service', function($http, $q) {
     };
     
     this.search_for_organizations = function(search_term){
-        var deferred = $q.defer();
         search_tearm = encodeURIComponent(search_term);
-        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'entities.json?apikey=' + sunlight_api_key + '&search=' + search_tearm + '&type=organization&callback=JSON_CALLBACK').then(
+        
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'entities.json?search=' + search_tearm + '&type=organization&';
+        return this._jsonp_request(endpoint, 
             function(data){
-                deferred.resolve(data.data);
-            },
-            function(fail_reason){
-                deferred.reject(fail_reason);
-            }
-        );
-        return deferred.promise;
+                return data.data;
+            });        
     }
     
     this.get_organization_by_entity_id = function(entity_id){
-        var deferred = $q.defer();
-        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'entities/' + entity_id + '.json?apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').then(
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'entities/' + entity_id + '.json?';
+        return this._jsonp_request(endpoint, 
             function(data){
-                deferred.resolve(new Organization(data.data));
-            },
-            function(fail_reason){
-                deferred.reject(fail_reason);
-            }
-        );
-        return deferred.promise;
+                return new Organization(data.data);
+            });
     }
     
     this._get_recipients_for_organization_entity_id = function(entity_id, type){
-        var deferred = $q.defer();
-
-        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/' + type + '.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').then(
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/' + type + '.json?';
+        return this._jsonp_request(endpoint, 
             function(data){
-                deferred.resolve(data.data);
-            },
-            function(fail_reason){
-                deferred.reject(fail_reason);
-            }
-        );
-        return deferred.promise;        
+                return data.data;
+            });    
     }
     
     this.get_top_recipients_for_organization_entity_id = function(entity_id){
