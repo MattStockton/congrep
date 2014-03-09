@@ -21,7 +21,7 @@
                 <h4><span class="label label-primary">Top Donor Companies</span></h4>
                 <ul class="list-group">
                     <li ng-repeat="donor in top_donors" class="list-group-item">
-                        {{ donor.name }} (${{ donor.total_amount}})
+                        <a ng-click="go_to_donor(donor)">{{ donor.name }} (${{ donor.total_amount}})</a>
                     </li>
                 </ul>
                 <h4><span class="label label-primary">Top Contributing Industries</span></h4>

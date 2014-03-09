@@ -216,7 +216,7 @@ congress_service.service('congress_service', function($http, $q) {
             promises.push($http.get(SUNLIGHT_ROOT_URI + 'legislators?' + query + '&apikey=' + sunlight_api_key));
          } 
         
-        var query = "query=" + search_text;
+        var query = "query=" + encodeURIComponent(search_text);
         promises.push($http.get(SUNLIGHT_ROOT_URI + 'legislators?' + query + '&apikey=' + sunlight_api_key));
        
         var deferred = $q.defer();
@@ -237,5 +237,33 @@ congress_service.service('congress_service', function($http, $q) {
         );
         
         return deferred.promise;
-    };     
+    };
+    
+    this.search_for_organizations = function(search_term){
+    	var deferred = $q.defer();
+    	search_tearm = encodeURIComponent(search_term);
+        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'entities.json?apikey=' + sunlight_api_key + '&search=' + search_tearm + '&type=organization&callback=JSON_CALLBACK').then(
+            function(data){
+                deferred.resolve(data.data);
+            },
+            function(fail_reason){
+                deferred.reject(fail_reason);
+            }
+        );
+        return deferred.promise;
+    }
+    
+    this.get_top_donor_recipients_for_organization_entity_id = function(entity_id){
+        var deferred = $q.defer();
+
+        $http.jsonp(TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/recipients.json?&apikey=' + sunlight_api_key + '&callback=JSON_CALLBACK').then(
+            function(data){
+                deferred.resolve(data.data);
+            },
+            function(fail_reason){
+                deferred.reject(fail_reason);
+            }
+        );
+        return deferred.promise;
+    };        
 });

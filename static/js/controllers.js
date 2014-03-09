@@ -128,34 +128,66 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
     $scope.go_to_legislator = function(bioguide_id){
         $location.path( 'congress/' + bioguide_id);
     };
+    
+    $scope.go_to_donor = function(donor){
+    	$location.path('organization/' + donor.id);
+    };
 
     $scope.run_search($routeParams.bioguide_id);
 };
 
 var congress_search_ctrl = function ($scope, $http, $window, $q, $location, congress_service) {
     $scope.congress_search_text = "";
-    $scope.congress_search_error = undefined;
+    $scope.organization_search_text = ""
+    $scope.search_error = undefined;
     $scope.legislator_search_results = [];
+    $scope.organization_search_results = [];
     
-    $scope.search = function(){
+    $scope.search_legislators = function(){
         congress_service.search_for_legislators($scope.congress_search_text).then(
             function(legislators){
                 if(legislators.length == 1){
-                    $scope.go_to(legislators[0]);
+                    $scope.go_to_legislator(legislators[0]);
                     return;
                 } else if(legislators.length > 1){
                     $scope.legislator_search_results = legislators;
                 } else {
-                    $scope.congress_search_error = "No results found";
+                    $scope.search_error = "No results found";
                 }
             }
         );  
     };
+
+    $scope.search_organizations = function(){
+        congress_service.search_for_organizations($scope.organization_search_text).then(
+                function(organizations){
+                    if(organizations.length == 1){
+                        $scope.go_to_organization(organizations[0]);
+                        return;
+                    } else if(organizations.length > 1){
+                        $scope.organization_search_results = organizations;
+                    } else {
+                        $scope.search_error = "No results found";
+                    }
+                }
+            );  
+    };
     
-    $scope.go_to = function(legislator){
+    $scope.go_to_legislator = function(legislator){
         $location.path('congress/' + legislator.bioguide_id);
+    };
+    
+    $scope.go_to_organization = function(organization){
+    	$location.path('organization/' + organization.id);
     };
 }
 
+var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
+	
+}
+
+
 congress_app.controller('congress_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', congress_detail_ctrl]);
 congress_app.controller('congress_search_ctrl', ['$scope', '$http', '$window', '$q', '$location', 'congress_service', congress_search_ctrl]);
+congress_app.controller('organization_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', organization_detail_ctrl]);
+
