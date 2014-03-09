@@ -1,4 +1,4 @@
-var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
+var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
 
     $scope.reset = function(){
         $scope.legislator = undefined;
@@ -126,7 +126,7 @@ var congress_detail_ctrl = function ($scope, $http, $window, $q, $location, $rou
     }
     
     $scope.go_to_legislator = function(bioguide_id){
-        $location.path( 'congress/' + bioguide_id);
+        $location.path( 'legislator/' + bioguide_id);
     };
     
     $scope.go_to_donor = function(donor){
@@ -174,7 +174,7 @@ var congress_search_ctrl = function ($scope, $http, $window, $q, $location, cong
     };
     
     $scope.go_to_legislator = function(legislator){
-        $location.path('congress/' + legislator.bioguide_id);
+        $location.path('legislator/' + legislator.bioguide_id);
     };
     
     $scope.go_to_organization = function(organization){
@@ -231,7 +231,7 @@ var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, 
 }
 
 
-congress_app.controller('congress_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', congress_detail_ctrl]);
+congress_app.controller('legislator_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', legislator_detail_ctrl]);
 congress_app.controller('congress_search_ctrl', ['$scope', '$http', '$window', '$q', '$location', 'congress_service', congress_search_ctrl]);
 congress_app.controller('organization_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', organization_detail_ctrl]);
 
