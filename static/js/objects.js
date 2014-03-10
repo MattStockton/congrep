@@ -39,10 +39,6 @@ Organization.prototype.get_bio_url = function(){
     return this.metadata.bio_url;
 }
 
-Organization.prototype.get_bio_url = function(){
-    return this.metadata.bio_url;
-}
-
 Organization.prototype.get_photo_url = function(){
     return this.metadata.photo_url;
 }
@@ -50,3 +46,31 @@ Organization.prototype.get_photo_url = function(){
 Organization.prototype.get_name = function(){
     return this.name;
 }
+
+
+function Legislator(data) {
+    _.extend(this, data);
+}
+
+Legislator.prototype.get_bioguide_id = function(){
+    return this.metadata.bioguide_id;
+}
+
+function RecipientPartyBreakdown(data) {
+    _.extend(this, data);
+}
+
+RecipientPartyBreakdown.prototype.get_raw = function(){
+    return this;
+}
+
+function GovtLevelBreakdown(data) {
+    _.extend(this, data);
+}
+
+GovtLevelBreakdown.prototype.get_raw = function(){
+    return this;
+}
+
+
+

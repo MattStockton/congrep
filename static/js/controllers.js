@@ -188,6 +188,12 @@ var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, 
         $scope.organization = undefined;
         $scope.top_recipients = [];
         $scope.top_pac_recipients = [];
+        $scope.recipient_party_breakdown = undefined;
+        $scope.govt_level_breakdown = undefined;
+        $scope.lobby_firms = [];
+        $scope.individual_lobbyists = [];
+        $scope.lobbying_issues = [];
+        $scope.lobbying_bills = [];
     }
     
     $scope.run_search = function(entity_id){
@@ -201,6 +207,12 @@ var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, 
         
         $scope.get_top_recipients(entity_id);   
         $scope.get_top_pac_recipients(entity_id); 
+        $scope.get_recipient_party_breakdown(entity_id);
+        $scope.get_govt_level_breakdown(entity_id);
+        $scope.get_lobby_firms(entity_id);
+        $scope.get_individual_lobbyists(entity_id);
+        $scope.get_lobbying_issues(entity_id);
+        $scope.get_lobbying_bills(entity_id);
     }
     
     $scope.get_top_recipients = function(entity_id){
@@ -219,8 +231,60 @@ var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, 
         );  
     }
     
+    $scope.get_recipient_party_breakdown = function(entity_id){
+        congress_service.get_recipient_party_breakdown_for_organization_entity_id(entity_id).then(
+            function(recipient_party_breakdown){
+                $scope.recipient_party_breakdown = recipient_party_breakdown;
+            }
+        );  
+    }
+    
+    $scope.get_govt_level_breakdown = function(entity_id){
+        congress_service.get_govt_level_breakdown_for_organization_entity_id(entity_id).then(
+            function(govt_level_breakdown){
+                $scope.govt_level_breakdown = govt_level_breakdown;
+            }
+        );  
+    }
+
+    $scope.get_lobby_firms = function(entity_id){
+        congress_service.get_lobby_firms_for_organization_entity_id(entity_id).then(
+            function(lobby_firms){
+                $scope.lobby_firms = lobby_firms;
+            }
+        );  
+    }
+    
+    $scope.get_individual_lobbyists = function(entity_id){
+        congress_service.get_individual_lobbyists_for_organization_entity_id(entity_id).then(
+            function(individual_lobbyists){
+                $scope.individual_lobbyists = individual_lobbyists;
+            }
+        );  
+    }
+
+    $scope.get_lobbying_issues = function(entity_id){
+        congress_service.get_lobbying_issues_for_organization_entity_id(entity_id).then(
+            function(lobbying_issues){
+                $scope.lobbying_issues = lobbying_issues;
+            }
+        );  
+    }
+
+    $scope.get_lobbying_bills = function(entity_id){
+        congress_service.get_lobbying_bills_for_organization_entity_id(entity_id).then(
+            function(lobbying_bills){
+                $scope.lobbying_bills = lobbying_bills;
+            }
+        );  
+    }
+
     $scope.go_to_recipient = function(recipient){
-        alert("Go to recipient");
+        congress_service.get_legislator_by_entity_id(recipient.id).then(
+            function(legislator){
+                $location.path('legislator/' + legislator.get_bioguide_id());
+            }
+        );  
     }
  
     $scope.go_to_pac_recipient = function(recipient){

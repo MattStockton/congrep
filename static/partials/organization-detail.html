@@ -1,9 +1,9 @@
 <div class="row clearfix">
     <div class="col-md-2 column">
-        <img ng-show="organization.get_photo_url() != undefined" class="cg-profile-picture" alt="140x140" ng-src="{{ organization.get_photo_url() }}"/> 
+        <img ng-show="organization.get_photo_url()" class="cg-profile-picture" alt="140x140" ng-src="{{ organization.get_photo_url() }}"/> 
         <address class="cg-top-spacing"> 
         <strong>{{organization.get_name()}}</strong><br>
-        <a ng-show="organization.get_bio_url() != undefined" href="{{ organization.get_bio_url() }}" target="_blank">Organization Bio</a><br>
+        <a ng-show="organization.get_bio_url()" href="{{ organization.get_bio_url() }}" target="_blank">Organization Bio</a><br>
         </address>
     </div>
     <div class="col-md-10 column">
@@ -24,15 +24,45 @@
             </tab>
             <tab heading="Recipient Breakdown">
                 <h4><span class="label label-primary">Recipients by Party</span></h4>
+                 <ul ng-show="recipient_party_breakdown" class="list-group">
+                    <li ng-repeat="(party, contribs) in recipient_party_breakdown.get_raw()" class="list-group-item">
+                        {{ party }} - {{ contribs[0] }} donations, ${{ contribs[1] }}
+                    </li>
+                </ul>               
                 <h4><span class="label label-primary">State / Federal Breakdown</span></h4>
+                 <ul ng-show="govt_level_breakdown" class="list-group">
+                    <li ng-repeat="(level,contribs) in govt_level_breakdown.get_raw()" class="list-group-item">
+                        {{ level }} - {{ contribs[0] }} donations, ${{ contribs[1] }}
+                    </li>
+                </ul>   
             </tab>
             <tab heading="Lobbying">
                 <h4><span class="label label-primary">Firms Hired</span></h4>
+                 <ul ng-show="lobby_firms" class="list-group">
+                    <li ng-repeat="firm in lobby_firms" class="list-group-item">
+                        {{ firm.registrant_name }} - ${{ firm.amount }}, {{ firm.count }} engagements
+                    </li>
+                </ul>   
                 <h4><span class="label label-primary">Individuals Hired</span></h4>
+                 <ul ng-show="individual_lobbyists" class="list-group">
+                    <li ng-repeat="lobbyist in individual_lobbyists" class="list-group-item">
+                        {{ lobbyist.lobbyist_name }} - {{ lobbyist.count }} engagements
+                    </li>
+                </ul>   
                 <h4><span class="label label-primary">Lobbying Issues</span></h4>
+                 <ul ng-show="lobbying_issues" class="list-group">
+                    <li ng-repeat="issue in lobbying_issues" class="list-group-item">
+                        {{ issue.issue }} - {{ issue.count }} engagements
+                    </li>
+                </ul>   
             </tab>
             <tab heading="Lobbied Bills">
                 <h4><span class="label label-primary">Lobbied on the following bills</span></h4>
+                 <ul ng-show="lobbying_bills" class="list-group">
+                    <li ng-repeat="bill in lobbying_bills" class="list-group-item">
+                        {{ bill.title}} - {{ bill.count }} engagements
+                    </li>
+                </ul> 
             </tab> 
             <tab heading="Dockets">
                 <h4><span class="label label-primary">Dockets mentioning this organization</span></h4>
