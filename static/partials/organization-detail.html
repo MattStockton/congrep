@@ -1,6 +1,6 @@
 <div class="row clearfix">
     <div class="col-md-2 column">
-        <img ng-show="organization.get_photo_url()" class="cg-profile-picture" alt="140x140" ng-src="{{ organization.get_photo_url() }}"/> 
+        <img ng-show="organization.get_photo_url()" class="cg-profile-picture img-thumbnail" alt="140x140" ng-src="{{ organization.get_photo_url() }}"/> 
         <address class="cg-top-spacing"> 
         <strong>{{organization.get_name()}}</strong><br>
         <a ng-show="organization.get_bio_url()" href="{{ organization.get_bio_url() }}" target="_blank">Organization Bio</a><br>

@@ -1,6 +1,6 @@
 <div class="row clearfix">
     <div class="col-md-2 column">
-        <img class="cg-profile-picture" alt="140x140" ng-src="http://theunitedstates.io/images/congress/225x275/{{ legislator.bioguide_id}}.jpg"> 
+        <img class="cg-profile-picture img-thumbnail" alt="140x140" ng-src="http://theunitedstates.io/images/congress/225x275/{{ legislator.bioguide_id}}.jpg"> 
         <address class="cg-top-spacing"> 
         <strong>{{legislator.first_name}} {{ legislator.last_name }}</strong><br> 
         {{ legislator.chamber }} ({{ legislator.party }})<br>
@@ -23,12 +23,12 @@
                         Filter by Year<span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a ng-click="filter_by_year('2014')">2014</a></li>
-                        <li><a ng-click="filter_by_year('2013')">2013</a></li>
-                        <li><a ng-click="filter_by_year('2012')">2012</a></li>                
-                        <li><a ng-click="filter_by_year('2011')">2011</a></li>    
-                        <li><a ng-click="filter_by_year('2010')">2010</a></li>    
-                        <li><a ng-click="filter_by_year(undefined)">All</a></li>
+                        <li ng-class="{active : year == '2014'}"><a ng-click="filter_by_year('2014')">2014</a></li>
+                        <li ng-class="{active : year == '2012'}"><a ng-click="filter_by_year('2012')">2012</a></li>
+                        <li ng-class="{active : year == '2010'}"><a ng-click="filter_by_year('2010')">2010</a></li>                
+                        <li ng-class="{active : year == '2008'}"><a ng-click="filter_by_year('2008')">2008</a></li>    
+                        <li ng-class="{active : year == '2006'}"><a ng-click="filter_by_year('2006')">2006</a></li>    
+                        <li ng-class="{active : year == undefined}"><a ng-click="filter_by_year(undefined)">All</a></li>
                     </ul>
                 </div>
             </div>
