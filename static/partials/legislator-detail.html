@@ -16,117 +16,136 @@
         </address>
     </div>
     <div class="col-md-10 column">
-        <tabset>
-            <tab heading="Funding">
-                <h4><span class="label label-primary">Top Donor Companies</span></h4>
-                <ul class="list-group">
-                    <li ng-repeat="donor in top_donors" class="list-group-item">
-                        <a ng-click="go_to_donor(donor)">{{ donor.name }} (${{ donor.total_amount}})</a>
-                    </li>
-                </ul>
-                <h4><span class="label label-primary">Top Contributing Industries</span></h4>
-                <ul class="list-group">
-                    <li ng-repeat="industry in top_contributing_industries" class="list-group-item">
-                        {{ industry.name}} (${{ industry.amount}}, {{ industry.count}} donations)
-                    </li>
-                </ul>
-                <h4><span class="label label-primary">Top Contributing Sectors</span></h4>
-                <ul class="list-group">
-                    <li ng-repeat="sector in top_contributing_sectors" class="list-group-item">
-                        {{ get_sector_name(sector.sector)}} (${{ sector.amount}}, {{ sector.count}} donations)
-                    </li>
-                </ul>
-                <h4><span class="label label-primary">Contribution Breakdown</span></h4>
-                <ul class="list-group">
-                    <li ng-repeat="(key, value) in contribution_breakdown" class="list-group-item">
-                        {{ key }} (${{ value[1]}}, {{ value[0]}} donations)
-                    </li>
-                </ul>
-            </tab>
-            <tab heading="Bills Sponsored">
-                <h4><span class="label label-primary">Primary Sponsor of the following Bills</span></h4>
-                <div class="list-group">
-                    <div ng-repeat="bill in bills_sponsored" class="list-group-item">
-                        <h4 ng-show="bill.short_title" class="list-group-item-heading">{{ bill.short_title}}</h4>
-                        <p class="list-group-item-text">{{ bill.official_title }}</p>
-                        <p class="list-group-item-text"><a href="{{ bill.urls.opencongress }}" target="_blank">Read the bill</a></p><br>
-                        <p class="list-group-item-text">Introduced on: {{ bill.introduced_on }}</p>
-                        <p class="list-group-item-text">Last action on: {{ bill.last_action_at }}</p>
-                        <p ng-show="bill.enacted_as" class="list-group-item-text text-success"><strong>Enacted</strong></p>             
+        <div class="row clearfix">
+            <div class="col-md-2 col-md-offset-10 column">
+                <div class="btn-group">
+                    <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                        Filter by Year<span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a ng-click="filter_by_year('2014')">2014</a></li>
+                        <li><a ng-click="filter_by_year('2013')">2013</a></li>
+                        <li><a ng-click="filter_by_year('2012')">2012</a></li>                
+                        <li><a ng-click="filter_by_year('2011')">2011</a></li>    
+                        <li><a ng-click="filter_by_year('2010')">2010</a></li>    
+                        <li><a ng-click="filter_by_year(undefined)">All</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <tabset>
+                <tab heading="Funding">
+                    <h4><span class="label label-primary">Top Donor Companies</span></h4>
+                    <ul class="list-group">
+                        <li ng-repeat="donor in top_donors" class="list-group-item">
+                            <a ng-click="go_to_donor(donor)">{{ donor.name }} (${{ donor.total_amount}})</a>
+                        </li>
+                    </ul>
+                    <h4><span class="label label-primary">Top Contributing Industries</span></h4>
+                    <ul class="list-group">
+                        <li ng-repeat="industry in top_contributing_industries" class="list-group-item">
+                            {{ industry.name}} (${{ industry.amount}}, {{ industry.count}} donations)
+                        </li>
+                    </ul>
+                    <h4><span class="label label-primary">Top Contributing Sectors</span></h4>
+                    <ul class="list-group">
+                        <li ng-repeat="sector in top_contributing_sectors" class="list-group-item">
+                            {{ get_sector_name(sector.sector)}} (${{ sector.amount}}, {{ sector.count}} donations)
+                        </li>
+                    </ul>
+                    <h4><span class="label label-primary">Contribution Breakdown</span></h4>
+                    <ul class="list-group">
+                        <li ng-repeat="(key, value) in contribution_breakdown" class="list-group-item">
+                            {{ key }} (${{ value[1]}}, {{ value[0]}} donations)
+                        </li>
+                    </ul>
+                </tab>
+                <tab heading="Bills Sponsored">
+                    <h4><span class="label label-primary">Primary Sponsor of the following Bills</span></h4>
+                    <div class="list-group">
+                        <div ng-repeat="bill in bills_sponsored" class="list-group-item">
+                            <h4 ng-show="bill.short_title" class="list-group-item-heading">{{ bill.short_title}}</h4>
+                            <p class="list-group-item-text">{{ bill.official_title }}</p>
+                            <p class="list-group-item-text"><a href="{{ bill.urls.opencongress }}" target="_blank">Read the bill</a></p><br>
+                            <p class="list-group-item-text">Introduced on: {{ bill.introduced_on }}</p>
+                            <p class="list-group-item-text">Last action on: {{ bill.last_action_at }}</p>
+                            <p ng-show="bill.enacted_as" class="list-group-item-text text-success"><strong>Enacted</strong></p>             
+                        </div>
                     </div>
-                </div>
-            </tab>
-            <tab heading="Voting Record">
-                <h4><span class="label label-primary">Recent Votes</span></h4>
-                <div class="list-group">
-                    <div ng-repeat="vote in votes" class="list-group-item">
-                        <h4 ng-show="vote.bill && vote.bill.short_title" class="list-group-item-heading">{{ vote.bill.short_title}}</h4>
-                        <p ng-show="vote.bill && vote.bill.official_title" class="list-group-item-text">{{ vote.bill.official_title }}</p>
-                        <p ng-show="vote.bill" class="list-group-item-text"><a href="{{ vote.bill.urls.opencongress }}" target="_blank">Read the bill</a></p><br>      
-                        <p ng-show="vote.has_bill_sponsor()" class="list-group-item-text"><strong>Sponsor: </strong><a ng-click="go_to_legislator(vote.get_sponsor_bioguide_id())">{{ vote.get_sponsor_full_name() }}</a></p>
-                        <p class="list-group-item-text"><strong>Motion:</strong> {{ vote.question }}</p>
-                        <p class="list-group-item-text"><strong>Result:</strong> {{ vote.result }}</p>
-                        <p class="list-group-item-text"><strong>Legislator's Vote:</strong> {{ vote.get_vote_for(legislator.bioguide_id) }}</p>
-                        <p class="list-group-item-text"><strong>Date:</strong> {{ vote.voted_at }}</p><br>
-                        <div class="list-group-item row cg-no-border">
-                            <div class="col-md-4 column">
-                                <span class="label label-default">Democratic Votes</span>
-                                <div class="list-group">
-                                  <div ng-repeat="(vote_type, num_votes) in vote.get_democrat_votes()" class="list-group-item">
-                                    <span class="badge">{{ num_votes }}</span>
-                                    {{ vote_type }}
-                                  </div>
+                </tab>
+                <tab heading="Voting Record">
+                    <h4><span class="label label-primary">Recent Votes</span></h4>
+                    <div class="list-group">
+                        <div ng-repeat="vote in votes" class="list-group-item">
+                            <h4 ng-show="vote.bill && vote.bill.short_title" class="list-group-item-heading">{{ vote.bill.short_title}}</h4>
+                            <p ng-show="vote.bill && vote.bill.official_title" class="list-group-item-text">{{ vote.bill.official_title }}</p>
+                            <p ng-show="vote.bill" class="list-group-item-text"><a href="{{ vote.bill.urls.opencongress }}" target="_blank">Read the bill</a></p><br>      
+                            <p ng-show="vote.has_bill_sponsor()" class="list-group-item-text"><strong>Sponsor: </strong><a ng-click="go_to_legislator(vote.get_sponsor_bioguide_id())">{{ vote.get_sponsor_full_name() }}</a></p>
+                            <p class="list-group-item-text"><strong>Motion:</strong> {{ vote.question }}</p>
+                            <p class="list-group-item-text"><strong>Result:</strong> {{ vote.result }}</p>
+                            <p class="list-group-item-text"><strong>Legislator's Vote:</strong> {{ vote.get_vote_for(legislator.bioguide_id) }}</p>
+                            <p class="list-group-item-text"><strong>Date:</strong> {{ vote.voted_at }}</p><br>
+                            <div class="list-group-item row cg-no-border">
+                                <div class="col-md-4 column">
+                                    <span class="label label-default">Democratic Votes</span>
+                                    <div class="list-group">
+                                      <div ng-repeat="(vote_type, num_votes) in vote.get_democrat_votes()" class="list-group-item">
+                                        <span class="badge">{{ num_votes }}</span>
+                                        {{ vote_type }}
+                                      </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4 column">
-                                <span class="label label-default">Republican Votes</span>
-                                <div class="list-group">
-                                  <div ng-repeat="(vote_type, num_votes) in vote.get_republican_votes()" class="list-group-item">
-                                    <span class="badge">{{ num_votes }}</span>
-                                    {{ vote_type }}
-                                  </div>
+                                <div class="col-md-4 column">
+                                    <span class="label label-default">Republican Votes</span>
+                                    <div class="list-group">
+                                      <div ng-repeat="(vote_type, num_votes) in vote.get_republican_votes()" class="list-group-item">
+                                        <span class="badge">{{ num_votes }}</span>
+                                        {{ vote_type }}
+                                      </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4 column">
-                                <span class="label label-default">Total Votes</span>
-                                <div class="list-group">
-                                  <div ng-repeat="(vote_type, num_votes) in vote.get_total_votes()" class="list-group-item">
-                                    <span class="badge">{{ num_votes }}</span>
-                                    {{ vote_type }}
-                                  </div>
+                                <div class="col-md-4 column">
+                                    <span class="label label-default">Total Votes</span>
+                                    <div class="list-group">
+                                      <div ng-repeat="(vote_type, num_votes) in vote.get_total_votes()" class="list-group-item">
+                                        <span class="badge">{{ num_votes }}</span>
+                                        {{ vote_type }}
+                                      </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>    
-                   </div>
-                </div>
-            </tab>
-            <tab heading="Fundraiser Events">
-                <h4><span class="label label-primary">Was a Beneficiary of the following Events</span></h4>
-                <div class="list-group">
-                    <div ng-repeat="event in events" class="list-group-item">
-                        <p ng-show="event.contributions_info" class="list-group-item-text"><strong>Contribution:</strong> {{ event.contributions_info }}</p>
-                        <p ng-show="event.entertainment" class="list-group-item-text"><strong>Entertainment:</strong> {{ event.entertainment }}</p>
-                        <p ng-show="event.make_checks_payable_to" class="list-group-item-text"><strong>Checks To:</strong> {{ event.make_checks_payable_to }}</p>
-                        <p ng-show="event.start_date" class="list-group-item-text"><strong>Date:</strong> {{ event.start_date }}</p>
-                        <p ng-show="event.venue.venue_name" class="list-group-item-text"><strong>Venue:</strong> {{ event.venue.venue_name }}</p>
-                        <p ng-show="event.hosts" class="list-group-item-text"><strong>Host:</strong> {{ event.hosts[0].name }}</p>
-                   </div>
-                </div>
-            </tab> 
-            <tab heading="Activities">
-                <h4><span class="label label-primary">Member of the following Committees</span></h4>
-                <ul class="list-group">
-                    <li ng-repeat="committee in committees" class="list-group-item">
-                        {{ committee.name }}
-                    </li>
-                </ul>
-                <h4><span class="label label-primary">Top Phrases</span></h4>
-                <ul class="list-group">
-                    <li ng-repeat="phrase in top_phrases" class="list-group-item">
-                        {{ phrase.ngram }} ({{ phrase.count}})
-                    </li>
-                </ul>
-            </tab>
-        </tabset>
+                            </div>    
+                       </div>
+                    </div>
+                </tab>
+                <tab heading="Fundraiser Events">
+                    <h4><span class="label label-primary">Was a Beneficiary of the following Events</span></h4>
+                    <div class="list-group">
+                        <div ng-repeat="event in events" class="list-group-item">
+                            <p ng-show="event.contributions_info" class="list-group-item-text"><strong>Contribution:</strong> {{ event.contributions_info }}</p>
+                            <p ng-show="event.entertainment" class="list-group-item-text"><strong>Entertainment:</strong> {{ event.entertainment }}</p>
+                            <p ng-show="event.make_checks_payable_to" class="list-group-item-text"><strong>Checks To:</strong> {{ event.make_checks_payable_to }}</p>
+                            <p ng-show="event.start_date" class="list-group-item-text"><strong>Date:</strong> {{ event.start_date }}</p>
+                            <p ng-show="event.venue.venue_name" class="list-group-item-text"><strong>Venue:</strong> {{ event.venue.venue_name }}</p>
+                            <p ng-show="event.hosts" class="list-group-item-text"><strong>Host:</strong> {{ event.hosts[0].name }}</p>
+                       </div>
+                    </div>
+                </tab> 
+                <tab heading="Activities">
+                    <h4><span class="label label-primary">Member of the following Committees</span></h4>
+                    <ul class="list-group">
+                        <li ng-repeat="committee in committees" class="list-group-item">
+                            {{ committee.name }}
+                        </li>
+                    </ul>
+                    <h4><span class="label label-primary">Top Phrases</span></h4>
+                    <ul class="list-group">
+                        <li ng-repeat="phrase in top_phrases" class="list-group-item">
+                            {{ phrase.ngram }} ({{ phrase.count}})
+                        </li>
+                    </ul>
+                </tab>
+            </tabset>
+        </div>
     </div>
 </div>

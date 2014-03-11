@@ -73,27 +73,40 @@ congress_service.service('congress_service', function($http, $q) {
             });
     };
     
-    this.get_top_donors_by_entity_id = function(entity_id){
+    this.get_top_donors_by_entity_id = function(entity_id, year){
         var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors.json?';
+        if(year){
+            endpoint = endpoint + 'cycle=' + year + '&';
+        }
         return this._jsonp_request(endpoint, 
             function(data){
                 return data.data;
             });
     };    
 
-    this.get_top_contributing_industries_by_entity_id = function(entity_id){
+    this.get_top_contributing_industries_by_entity_id = function(entity_id, year){
         var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors/industries.json?';
+        if(year){
+            endpoint = endpoint + 'cycle=' + year + '&';
+        }
         return this._jsonp_request(endpoint, 
             function(data){
                 return data.data;
             });
     };    
     
-    this.get_top_phrases_by_bioguide_id = function(bioguide_id){
+    this.get_top_phrases_by_bioguide_id = function(bioguide_id, year){
         var deferred = $q.defer();
 
+        var query = CAPITOL_WORDS_ROOT_URI + 'phrases.json?entity_type=legislator&n=3&apikey=' + sunlight_api_key + '&entity_value=' + bioguide_id;
+        if(year){
+            // TODO - Tried a few iterations of this, and doesn't seem to affect the results.
+            query = query + '&end_date=' + year + '-12-31';
+        }
+        query = query + '&callback=?';
+        
         // Need to use jQuery JSONP because of this: https://github.com/angular/angular.js/issues/1551
-        $.getJSON(CAPITOL_WORDS_ROOT_URI + 'phrases.json?entity_type=legislator&n=3&apikey=' + sunlight_api_key + '&entity_value=' + bioguide_id + '&callback=?').done(
+        $.getJSON(query).done(
             function(data){
                 deferred.resolve(data);
             }).fail(
@@ -105,16 +118,22 @@ congress_service.service('congress_service', function($http, $q) {
         return deferred.promise;
     };      
     
-    this.get_top_contributing_sectors_by_entity_id = function(entity_id){
+    this.get_top_contributing_sectors_by_entity_id = function(entity_id, year){
         var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors/sectors.json?';
+        if(year){
+            endpoint = endpoint + 'cycle=' + year + '&';
+        }
         return this._jsonp_request(endpoint, 
             function(data){
                 return data.data;
             });
     };    
 
-    this.get_contribution_breakdown_by_entity_id = function(entity_id){
+    this.get_contribution_breakdown_by_entity_id = function(entity_id, year){
         var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/pol/' + entity_id + '/contributors/type_breakdown.json?';
+        if(year){
+            endpoint = endpoint + 'cycle=' + year + '&';
+        }
         return this._jsonp_request(endpoint, 
             function(data){
                 return data.data;
@@ -138,18 +157,25 @@ congress_service.service('congress_service', function($http, $q) {
             });
     };
     
-    this.get_bills_sponsored_by_bioguide_id = function(bioguide_id){
+    this.get_bills_sponsored_by_bioguide_id = function(bioguide_id, year){
         var endpoint = SUNLIGHT_ROOT_URI + 'bills?sponsor_id=' + bioguide_id + '&order=last_action_at&';
+        if(year){
+            endpoint = endpoint + 'last_action_at__lte=' + year + '-12-31&';
+        }
+        
         return this._get_request(endpoint, 
             function(data){
                 return data.data.results;
             });
     };   
 
-    this.get_votes_by_bioguide_id = function(bioguide_id){
+    this.get_votes_by_bioguide_id = function(bioguide_id, year){
         var endpoint = SUNLIGHT_ROOT_URI + 'votes?voter_ids.' + bioguide_id +
           '__exists=true&order=voted_at&vote_type=passage&per_page=50&' +
           'fields=voted_at,question,result,bill,breakdown,voters.' + bioguide_id + '&';
+        if(year){
+            endpoint = endpoint + 'year=' + year + '&';
+        }
           
         return this._get_request(endpoint, 
             function(data){
@@ -160,8 +186,12 @@ congress_service.service('congress_service', function($http, $q) {
             });
     };
 
-    this.get_events_by_crp_id = function(crp_id){
+    this.get_events_by_crp_id = function(crp_id, year){
         var endpoint = PARTY_TIME_ROOT_URI + 'event?format=jsonp&beneficiaries__crp_id=' + crp_id + '&';
+        if(year){
+            endpoint = endpoint + 'start_date__lt=' + year +'-12-31&';
+        }
+        
         return this._jsonp_request(endpoint, 
             function(data){
                 return data.data.objects;

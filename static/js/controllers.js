@@ -1,6 +1,9 @@
 var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
 
-    $scope.reset = function(){
+    $scope.reset = function(bioguide_id){
+        $scope.bioguide_id = bioguide_id;
+        $scope.entity_id = undefined;
+        $scope.year = undefined;
         $scope.legislator = undefined;
         $scope.top_donors = [];
         $scope.top_phrases = [];
@@ -15,42 +18,42 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
     }
     
     $scope.run_search = function(bioguide_id){
-        $scope.reset();
+        $scope.reset(bioguide_id);
         congress_service.get_legislator_by_bioguide_id(bioguide_id).then(
             function(legislator){
                 $scope.legislator = legislator;
                 
-                $scope.get_top_phrases(bioguide_id);   
+                $scope.get_top_phrases(bioguide_id, $scope.year);   
                 $scope.get_committees(bioguide_id); 
-                $scope.get_bills_sponsored(bioguide_id);
-                $scope.get_votes(bioguide_id);
-                $scope.get_events(legislator.crp_id);
+                $scope.get_bills_sponsored(bioguide_id, $scope.year);
+                $scope.get_votes(bioguide_id, $scope.year);
+                $scope.get_events(legislator.crp_id, $scope.year);
                 
                 congress_service.get_entity_id_from_bioguide_id(bioguide_id).then(
                     function(entity_id){
-                        $scope.legislator.entity_id = entity_id;
+                        $scope.entity_id = entity_id;
                         
-                        $scope.get_top_donors(entity_id);
-                        $scope.get_top_contributing_industries(entity_id);
-                        $scope.get_top_contributing_sectors(entity_id);
-                        $scope.get_contribution_breakdown(entity_id);
-                        $scope.get_independent_expenditures(entity_id);
+                        $scope.get_top_donors($scope.entity_id, $scope.year);
+                        $scope.get_top_contributing_industries($scope.entity_id, $scope.year);
+                        $scope.get_top_contributing_sectors($scope.entity_id, $scope.year);
+                        $scope.get_contribution_breakdown($scope.entity_id, $scope.year);
+                        $scope.get_independent_expenditures($scope.entity_id);
                     }
                 );
             }
         );
     }
   
-    $scope.get_top_donors = function(entity_id){
-        congress_service.get_top_donors_by_entity_id(entity_id).then(
+    $scope.get_top_donors = function(entity_id, year){
+        congress_service.get_top_donors_by_entity_id(entity_id, year).then(
             function(data){
                 $scope.top_donors = data;
             }
         );  
     }
     
-    $scope.get_top_phrases = function(bioguide_id){
-        congress_service.get_top_phrases_by_bioguide_id(bioguide_id).then(
+    $scope.get_top_phrases = function(bioguide_id, year){
+        congress_service.get_top_phrases_by_bioguide_id(bioguide_id, year).then(
             function(data){
                 $scope.top_phrases = data;
             }
@@ -65,40 +68,40 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
         );  
     };
 
-    $scope.get_bills_sponsored = function(bioguide_id){
-        congress_service.get_bills_sponsored_by_bioguide_id(bioguide_id).then(
+    $scope.get_bills_sponsored = function(bioguide_id, year){
+        congress_service.get_bills_sponsored_by_bioguide_id(bioguide_id, year).then(
             function(data){
                 $scope.bills_sponsored = data;
             }
         );  
     };
 
-    $scope.get_votes = function(bioguide_id){
-        congress_service.get_votes_by_bioguide_id(bioguide_id).then(
+    $scope.get_votes = function(bioguide_id, year){
+        congress_service.get_votes_by_bioguide_id(bioguide_id, year).then(
             function(data){
                 $scope.votes = data;
             }
         );  
     };
     
-    $scope.get_top_contributing_industries = function(entity_id){     
-        congress_service.get_top_contributing_industries_by_entity_id(entity_id).then(
+    $scope.get_top_contributing_industries = function(entity_id, year){     
+        congress_service.get_top_contributing_industries_by_entity_id(entity_id, year).then(
             function(data){
                 $scope.top_contributing_industries = data;
             }
         );  
     };
 
-    $scope.get_top_contributing_sectors = function(entity_id){     
-        congress_service.get_top_contributing_sectors_by_entity_id(entity_id).then(
+    $scope.get_top_contributing_sectors = function(entity_id, year){     
+        congress_service.get_top_contributing_sectors_by_entity_id(entity_id, year).then(
             function(data){
                 $scope.top_contributing_sectors = data;
             }
         );  
     };
 
-    $scope.get_contribution_breakdown = function(entity_id){     
-        congress_service.get_contribution_breakdown_by_entity_id(entity_id).then(
+    $scope.get_contribution_breakdown = function(entity_id, year){     
+        congress_service.get_contribution_breakdown_by_entity_id(entity_id, year).then(
             function(data){
                 $scope.contribution_breakdown = data;
             }
@@ -113,8 +116,8 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
         );  
     };
  
-    $scope.get_events = function(crp_id){  
-        congress_service.get_events_by_crp_id(crp_id).then(
+    $scope.get_events = function(crp_id, year){  
+        congress_service.get_events_by_crp_id(crp_id, year).then(
             function(data){
                 $scope.events = data;
             }
@@ -132,6 +135,19 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
     $scope.go_to_donor = function(donor){
         $location.path('organization/' + donor.id);
     };
+    
+    $scope.filter_by_year = function(year){
+        $scope.year = year;
+        
+        $scope.get_top_phrases($scope.bioguide_id, $scope.year);   
+        $scope.get_bills_sponsored($scope.bioguide_id, $scope.year);
+        $scope.get_votes($scope.bioguide_id, $scope.year);
+        $scope.get_events($scope.legislator.crp_id, $scope.year);
+        $scope.get_top_donors($scope.entity_id, $scope.year);
+        $scope.get_top_contributing_industries($scope.entity_id, $scope.year);
+        $scope.get_top_contributing_sectors($scope.entity_id, $scope.year);
+        $scope.get_contribution_breakdown($scope.entity_id, $scope.year);
+    }
 
     $scope.run_search($routeParams.bioguide_id);
 };
