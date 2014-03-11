@@ -66,7 +66,7 @@ congress_service.service('congress_service', function($http, $q) {
     };
 
     this.get_legislator_by_bioguide_id = function(bioguide_id){
-        var endpoint = SUNLIGHT_ROOT_URI + 'legislators?bioguide_id=' + bioguide_id + '&';   
+        var endpoint = SUNLIGHT_ROOT_URI + 'legislators?bioguide_id=' + bioguide_id + '&all_legislators=true&';   
         return this._get_request(endpoint, 
             function(data){
                 return data.data.results[0];
@@ -174,11 +174,11 @@ congress_service.service('congress_service', function($http, $q) {
         var split_name = search_text.split(" ");
         if(split_name.length == 2){
             var query = "first_name=" + split_name[0] + "&last_name=" + split_name[1];
-            promises.push($http.get(SUNLIGHT_ROOT_URI + 'legislators?' + query + '&apikey=' + sunlight_api_key));
+            promises.push($http.get(SUNLIGHT_ROOT_URI + 'legislators?' + query + '&all_legislators=true&apikey=' + sunlight_api_key));
          } 
         
         var query = "query=" + encodeURIComponent(search_text);
-        promises.push($http.get(SUNLIGHT_ROOT_URI + 'legislators?' + query + '&apikey=' + sunlight_api_key));
+        promises.push($http.get(SUNLIGHT_ROOT_URI + 'legislators?' + query + '&all_legislators=true&apikey=' + sunlight_api_key));
        
         var deferred = $q.defer();
         
@@ -290,6 +290,22 @@ congress_service.service('congress_service', function($http, $q) {
             return _.filter(data.data, function(bill){
                 return bill.title;
             });
+        });    
+    }
+
+    this.get_regulatory_docket_mentions_for_organization_entity_id = function(entity_id){
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/regulations_text.json?';
+        return this._jsonp_request(endpoint, 
+        function(data){
+            return data.data;
+        });    
+    }
+    
+    this.get_regulatory_docket_submissions_for_organization_entity_id = function(entity_id){
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/regulations_submitter.json?';
+        return this._jsonp_request(endpoint, 
+        function(data){
+            return data.data;
         });    
     }
 });

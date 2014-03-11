@@ -194,6 +194,8 @@ var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, 
         $scope.individual_lobbyists = [];
         $scope.lobbying_issues = [];
         $scope.lobbying_bills = [];
+        $scope.regulatory_docket_mentions = [];
+        $scope.regulatory_docket_submissions = [];
     }
     
     $scope.run_search = function(entity_id){
@@ -213,6 +215,8 @@ var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, 
         $scope.get_individual_lobbyists(entity_id);
         $scope.get_lobbying_issues(entity_id);
         $scope.get_lobbying_bills(entity_id);
+        $scope.get_regulatory_docket_mentions(entity_id);
+        $scope.get_regulatory_docket_submissions(entity_id);
     }
     
     $scope.get_top_recipients = function(entity_id){
@@ -279,6 +283,22 @@ var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, 
         );  
     }
 
+    $scope.get_regulatory_docket_mentions = function(entity_id){
+        congress_service.get_regulatory_docket_mentions_for_organization_entity_id(entity_id).then(
+            function(regulatory_docket_mentions){
+                $scope.regulatory_docket_mentions = regulatory_docket_mentions;
+            }
+        );  
+    }
+    
+    $scope.get_regulatory_docket_submissions = function(entity_id){
+        congress_service.get_regulatory_docket_submissions_for_organization_entity_id(entity_id).then(
+            function(regulatory_docket_submissions){
+                $scope.regulatory_docket_submissions = regulatory_docket_submissions;
+            }
+        );  
+    }
+    
     $scope.go_to_recipient = function(recipient){
         congress_service.get_legislator_by_entity_id(recipient.id).then(
             function(legislator){

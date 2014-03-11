@@ -66,6 +66,21 @@
             </tab> 
             <tab heading="Dockets">
                 <h4><span class="label label-primary">Dockets mentioning this organization</span></h4>
+                <ul ng-show="regulatory_docket_mentions" class="list-group">
+                    <li ng-repeat="docket in regulatory_docket_mentions" class="list-group-item">
+                        {{ docket.title }}<br>
+                        {{ docket.count }} mentions<br>
+                        {{ docket.year }} / {{ docket.agency }}
+                    </li>
+                </ul> 
+                <h4><span class="label label-primary">Dockets with comments submitted by this organization</span></h4>
+                <ul ng-show="regulatory_docket_submissions" class="list-group">
+                    <li ng-repeat="docket in regulatory_docket_submissions" class="list-group-item">
+                        {{ docket.title }}<br>
+                        {{ docket.count }} comments<br>
+                        {{ docket.year }} / {{ docket.agency }}
+                    </li>
+                </ul> 
             </tab>
         </tabset>
     </div>
