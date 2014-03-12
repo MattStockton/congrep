@@ -1,3 +1,30 @@
+function PaginationInfo(data){
+   _.extend(this, data);
+}
+
+PaginationInfo.prototype.get_total_count = function() {
+       return this.count;
+}
+
+PaginationInfo.prototype.get_current_page_count = function() {
+       return this.page.count;
+}
+
+PaginationInfo.prototype.get_current_page = function() {
+       return this.page.page;
+}
+
+PaginationInfo.prototype.get_count_per_page = function() {
+       return this.page.per_page;
+}
+
+PaginationInfo.prototype.get_total_pages = function() {
+    if(this.count && this.page){
+        return Math.ceil(this.get_total_count() / this.get_count_per_page());    
+    }
+    return 0;
+}
+
 function Vote(data) {
    _.extend(this, data);
 }

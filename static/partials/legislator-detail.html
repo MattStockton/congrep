@@ -75,7 +75,23 @@
                     </div>
                 </tab>
                 <tab heading="Voting Record">
-                    <h4><span class="label label-primary">Recent Votes</span></h4>
+                    <div class="cg-legislator-tab-header">
+                        <div class="pull-left">
+                            <h4><span class="label label-primary">Recent Votes</span></h4>
+                        </div>
+                        <div class="pull-right">
+                            <ul class="pagination cg-no-vertical-margin">
+                                <li><a href="#">&laquo;</a></li>
+                                <li><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">4</a></li>
+                                <li><a href="#">5</a></li>
+                                <li><a href="#">&raquo;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
                     <div class="list-group">
                         <div ng-repeat="vote in votes" class="list-group-item">
                             <h4 ng-show="vote.bill && vote.bill.short_title" class="list-group-item-heading">{{ vote.bill.short_title}}</h4>

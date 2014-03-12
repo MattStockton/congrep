@@ -10,6 +10,11 @@
     border: none;
 }
 
-.tab-pane {
-    margin-top: 20px;
+.cg-no-vertical-margin {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.cg-legislator-tab-header {
+    margin-top: 10px;
 }

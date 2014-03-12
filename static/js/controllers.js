@@ -79,7 +79,7 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
     $scope.get_votes = function(bioguide_id, year){
         congress_service.get_votes_by_bioguide_id(bioguide_id, year).then(
             function(data){
-                $scope.votes = data;
+                $scope.votes = data.votes;
             }
         );  
     };
