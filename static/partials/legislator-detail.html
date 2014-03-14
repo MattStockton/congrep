@@ -84,7 +84,7 @@
                                 <li ng-show="vote_pagination.has_previous()"><a href="#">&laquo;</a></li>
                                 <li ng-repeat="page_number in vote_pagination.get_pages_to_show()"
                                     ng-class="{active : page_number == vote_pagination.get_current_page()}">
-                                    <a href="#">{{ page_number }}</a>
+                                    <a ng-click="load_vote_page(page_number)">{{ page_number }}</a>
                                 </li>
                                 <li ng-show="vote_pagination.has_next()"><a href="#">&raquo;</a></li>
                             </ul>

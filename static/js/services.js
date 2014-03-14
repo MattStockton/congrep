@@ -169,15 +169,16 @@ congress_service.service('congress_service', function($http, $q) {
             });
     };   
 
-    this.get_votes_by_bioguide_id = function(bioguide_id, year){
+    this.get_votes_by_bioguide_id = function(bioguide_id, year, page_number){
         var per_page = 20;
         var endpoint = SUNLIGHT_ROOT_URI + 'votes?voter_ids.' + bioguide_id +
           '__exists=true&order=voted_at&vote_type=passage&per_page=' + per_page + '&' +
+          'page=' + page_number + '&' +
           'fields=voted_at,question,result,bill,breakdown,voters.' + bioguide_id + '&';
         if(year){
             endpoint = endpoint + 'year=' + year + '&';
         }
-          
+        
         return this._get_request(endpoint, 
             function(data){
                 var votes = _.map(data.data.results, 
