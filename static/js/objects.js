@@ -25,6 +25,21 @@ PaginationInfo.prototype.get_total_pages = function() {
     return 0;
 }
 
+PaginationInfo.prototype.get_pages_to_show = function(){
+    var start_range = Math.max(1, this.get_current_page() - 5);
+    var end_range = Math.min(this.get_total_pages(), this.get_current_page() + 5);
+    
+    return _.range(start_range, end_range);    
+}
+
+PaginationInfo.prototype.has_previous = function(){
+    return this.get_current_page() > 1;
+}
+
+PaginationInfo.prototype.has_next = function(){
+    return this.get_current_page() < this.get_total_pages();
+}
+
 function Vote(data) {
    _.extend(this, data);
 }

@@ -14,6 +14,7 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
         $scope.committees = [];
         $scope.bills_sponsored = [];
         $scope.votes = [];
+        $scope.vote_pagination = undefined;
         $scope.events = [];       
     }
     
@@ -80,6 +81,7 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
         congress_service.get_votes_by_bioguide_id(bioguide_id, year).then(
             function(data){
                 $scope.votes = data.votes;
+                $scope.vote_pagination = data.pagination;
             }
         );  
     };
