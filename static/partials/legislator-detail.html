@@ -75,18 +75,18 @@
                     </div>
                 </tab>
                 <tab heading="Voting Record">
-                    <div ng-show="vote_pagination && vote_pagination.get_pages_to_show().length > 1" class="cg-legislator-tab-header">
+                    <div class="cg-legislator-tab-header">
                         <div class="pull-left">
                             <h4><span class="label label-primary">Recent Votes</span></h4>
                         </div>
-                        <div class="pull-right">
+                        <div ng-show="vote_pagination && vote_pagination.get_pages_to_show().length > 1" class="pull-right">
                             <ul class="pagination cg-no-vertical-margin">
-                                <li ng-show="vote_pagination.has_previous()"><a href="#">&laquo;</a></li>
+                                <li ng-show="vote_pagination.has_previous()"><a ng-click="load_vote_page(vote_pagination.get_previous_link_page())">&laquo;</a></li>
                                 <li ng-repeat="page_number in vote_pagination.get_pages_to_show()"
                                     ng-class="{active : page_number == vote_pagination.get_current_page()}">
                                     <a ng-click="load_vote_page(page_number)">{{ page_number }}</a>
                                 </li>
-                                <li ng-show="vote_pagination.has_next()"><a href="#">&raquo;</a></li>
+                                <li ng-show="vote_pagination.has_next()"><a ng-click="load_vote_page(vote_pagination.get_next_link_page())">&raquo;</a></li>
                             </ul>
                         </div>
                     </div>

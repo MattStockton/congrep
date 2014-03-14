@@ -67,7 +67,7 @@ congress_service.service('congress_service', function($http, $q) {
 
     this.get_legislator_by_bioguide_id = function(bioguide_id){
         var endpoint = SUNLIGHT_ROOT_URI + 'legislators?bioguide_id=' + bioguide_id + '&all_legislators=true&';   
-        return this._get_request(endpoint, 
+        return this._jsonp_request(endpoint, 
             function(data){
                 return data.data.results[0];
             });
@@ -151,7 +151,7 @@ congress_service.service('congress_service', function($http, $q) {
     
     this.get_committees_by_bioguide_id = function(bioguide_id){
         var endpoint = SUNLIGHT_ROOT_URI + 'committees?member_ids=' + bioguide_id + '&';
-        return this._get_request(endpoint, 
+        return this._jsonp_request(endpoint, 
             function(data){
                 return data.data.results;
             });
@@ -163,7 +163,7 @@ congress_service.service('congress_service', function($http, $q) {
             endpoint = endpoint + 'last_action_at__lte=' + year + '-12-31&';
         }
         
-        return this._get_request(endpoint, 
+        return this._jsonp_request(endpoint, 
             function(data){
                 return data.data.results;
             });
@@ -179,7 +179,7 @@ congress_service.service('congress_service', function($http, $q) {
             endpoint = endpoint + 'year=' + year + '&';
         }
         
-        return this._get_request(endpoint, 
+        return this._jsonp_request(endpoint, 
             function(data){
                 var votes = _.map(data.data.results, 
                     function(cur){

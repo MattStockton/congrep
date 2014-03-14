@@ -1,5 +1,6 @@
 function PaginationInfo(data){
    _.extend(this, data);
+   this.pagination_width = 5;
 }
 
 PaginationInfo.prototype.get_total_count = function() {
@@ -26,18 +27,26 @@ PaginationInfo.prototype.get_total_pages = function() {
 }
 
 PaginationInfo.prototype.get_pages_to_show = function(){
-    var start_range = Math.max(1, this.get_current_page() - 5);
-    var end_range = Math.min(this.get_total_pages(), this.get_current_page() + 5);
+    var start_range = Math.max(1, this.get_current_page() - this.pagination_width);
+    var end_range = Math.min(this.get_total_pages(), this.get_current_page() + this.pagination_width);
     
     return _.range(start_range, end_range);    
 }
 
 PaginationInfo.prototype.has_previous = function(){
-    return this.get_current_page() > 1;
+    return this.get_current_page() - this.pagination_width > 1;
 }
 
 PaginationInfo.prototype.has_next = function(){
-    return this.get_current_page() < this.get_total_pages();
+    return this.get_total_pages() > this.get_current_page() + this.pagination_width;
+}
+
+PaginationInfo.prototype.get_next_link_page = function(){
+    return this.get_current_page() + this.pagination_width;
+}
+
+PaginationInfo.prototype.get_previous_link_page = function(){
+    return this.get_current_page() - this.pagination_width;
 }
 
 function Vote(data) {
