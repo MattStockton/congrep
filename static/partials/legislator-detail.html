@@ -62,7 +62,22 @@
                     </ul>
                 </tab>
                 <tab heading="Bills Sponsored">
-                    <h4><span class="label label-primary">Primary Sponsor of the following Bills</span></h4>
+                    <div class="cg-legislator-tab-header">
+                        <div class="pull-left">
+                            <h4><span class="label label-primary">Sponsored the following Bills</span></h4>
+                        </div>
+                        <div ng-show="bill_pagination && bill_pagination.get_pages_to_show().length > 1" class="pull-right">
+                            <ul class="pagination cg-no-vertical-margin">
+                                <li ng-show="bill_pagination.has_previous()"><a ng-click="load_bill_page(bill_pagination.get_previous_link_page())">&laquo;</a></li>
+                                <li ng-repeat="page_number in bill_pagination.get_pages_to_show()"
+                                    ng-class="{active : page_number == bill_pagination.get_current_page()}">
+                                    <a ng-click="load_bill_page(page_number)">{{ page_number }}</a>
+                                </li>
+                                <li ng-show="bill_pagination.has_next()"><a ng-click="load_bill_page(bill_pagination.get_next_link_page())">&raquo;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
                     <div class="list-group">
                         <div ng-repeat="bill in bills_sponsored" class="list-group-item">
                             <h4 ng-show="bill.short_title" class="list-group-item-heading">{{ bill.short_title}}</h4>

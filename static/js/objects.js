@@ -123,5 +123,8 @@ GovtLevelBreakdown.prototype.get_raw = function(){
     return this;
 }
 
+function Bill(data) {
+    _.extend(this, data);
+}
 
 

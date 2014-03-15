@@ -13,6 +13,7 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
         $scope.independent_expenditures = [];
         $scope.committees = [];
         $scope.bills_sponsored = [];
+        $scope.bill_pagination = undefined;
         $scope.votes = [];
         $scope.vote_pagination = undefined;
         $scope.events = [];       
@@ -26,7 +27,7 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
                 
                 $scope.get_top_phrases(bioguide_id, $scope.year);   
                 $scope.get_committees(bioguide_id); 
-                $scope.get_bills_sponsored(bioguide_id, $scope.year);
+                $scope.get_bills_sponsored(bioguide_id, $scope.year, 1);
                 $scope.get_votes(bioguide_id, $scope.year, 1);
                 $scope.get_events(legislator.crp_id, $scope.year);
                 
@@ -69,10 +70,11 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
         );  
     };
 
-    $scope.get_bills_sponsored = function(bioguide_id, year){
-        congress_service.get_bills_sponsored_by_bioguide_id(bioguide_id, year).then(
+    $scope.get_bills_sponsored = function(bioguide_id, year, page_number){
+        congress_service.get_bills_sponsored_by_bioguide_id(bioguide_id, year, page_number).then(
             function(data){
-                $scope.bills_sponsored = data;
+                $scope.bills_sponsored = data.bills;
+                $scope.bill_pagination = data.pagination;
             }
         );  
     };
@@ -142,7 +144,7 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
         $scope.year = year;
         
         $scope.get_top_phrases($scope.bioguide_id, $scope.year);   
-        $scope.get_bills_sponsored($scope.bioguide_id, $scope.year);
+        $scope.get_bills_sponsored($scope.bioguide_id, $scope.year, 1);
         $scope.get_votes($scope.bioguide_id, $scope.year, 1);
         $scope.get_events($scope.legislator.crp_id, $scope.year);
         $scope.get_top_donors($scope.entity_id, $scope.year);
@@ -153,6 +155,10 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
     
     $scope.load_vote_page = function(page_number){
         $scope.get_votes($scope.bioguide_id, $scope.year, page_number);
+    }
+    
+    $scope.load_bill_page = function(page_number){
+        $scope.get_bills_sponsored($scope.bioguide_id, $scope.year, page_number);
     }
 
     $scope.run_search($routeParams.bioguide_id);

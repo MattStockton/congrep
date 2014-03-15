@@ -157,15 +157,25 @@ congress_service.service('congress_service', function($http, $q) {
             });
     };
     
-    this.get_bills_sponsored_by_bioguide_id = function(bioguide_id, year){
-        var endpoint = SUNLIGHT_ROOT_URI + 'bills?sponsor_id=' + bioguide_id + '&order=last_action_at&';
+    this.get_bills_sponsored_by_bioguide_id = function(bioguide_id, year, page_number){
+        var per_page = 20;
+        var endpoint = SUNLIGHT_ROOT_URI + 'bills?sponsor_id=' + bioguide_id + '&order=last_action_at&' +
+            'page=' + page_number + '&per_page=' + per_page + '&';
         if(year){
             endpoint = endpoint + 'last_action_at__lte=' + year + '-12-31&';
         }
         
         return this._jsonp_request(endpoint, 
             function(data){
-                return data.data.results;
+            var bills = _.map(data.data.results, 
+                    function(cur){
+                        return new Bill(cur);
+                    });
+                
+                return {
+                    bills : bills,
+                    pagination : new PaginationInfo({ count : data.data.count, page: data.data.page})
+                }
             });
     };   
 
