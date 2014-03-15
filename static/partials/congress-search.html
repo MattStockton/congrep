@@ -40,6 +40,23 @@
                 </a>
             </div>
         </div>
+        <form ng-submit="search_bills()" class="form-horizontal" role="form">
+            <div class="form-group">
+                <div class="input-group">
+                    <input ng-model="bill_search_text" type="text" class="form-control" placeholder="Search for a Bill"/>
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default">Search</button>
+                    </span>
+                </div>
+            </div>
+        </form>
+        <div ng-show="bill_search_results.length > 0">
+            <div class="list-group">
+                <a ng-repeat="bill in bill_search_results" ng-click="go_to_bill(bill)" class="list-group-item">
+                   {{  bill.bill_id }}
+                </a>
+            </div>
+        </div>
     </div>
     <div class="col-md-2 column">
     </div>

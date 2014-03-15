@@ -292,41 +292,41 @@ congress_service.service('congress_service', function($http, $q) {
     this.get_recipient_party_breakdown_for_organization_entity_id = function(entity_id){
         var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/recipients/party_breakdown.json?';
         return this._jsonp_request(endpoint, 
-        function(data){
-            return new RecipientPartyBreakdown(data.data);
-        });    
+            function(data){
+                return new RecipientPartyBreakdown(data.data);
+            });    
     }
     
     this.get_govt_level_breakdown_for_organization_entity_id = function(entity_id){
         var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/recipients/level_breakdown.json?';
         return this._jsonp_request(endpoint, 
-        function(data){
-            return new GovtLevelBreakdown(data.data);
-        });    
+            function(data){
+                return new GovtLevelBreakdown(data.data);
+            });    
     }
  
     this.get_lobby_firms_for_organization_entity_id = function(entity_id){
         var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/registrants.json?';
         return this._jsonp_request(endpoint, 
-        function(data){
-            return data.data
-        });    
+            function(data){
+                return data.data
+            });    
     }
 
     this.get_individual_lobbyists_for_organization_entity_id = function(entity_id){
         var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/lobbyists.json?';
         return this._jsonp_request(endpoint, 
-        function(data){
-            return data.data
-        });    
+            function(data){
+                return data.data
+            });    
     }
 
     this.get_lobbying_issues_for_organization_entity_id = function(entity_id){
         var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/issues.json?';
         return this._jsonp_request(endpoint, 
-        function(data){
-            return data.data
-        });    
+            function(data){
+                return data.data
+            });    
     }
 
     this.get_lobbying_bills_for_organization_entity_id = function(entity_id){
@@ -343,16 +343,33 @@ congress_service.service('congress_service', function($http, $q) {
     this.get_regulatory_docket_mentions_for_organization_entity_id = function(entity_id){
         var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/regulations_text.json?';
         return this._jsonp_request(endpoint, 
-        function(data){
-            return data.data;
-        });    
+            function(data){
+                return data.data;
+            });    
     }
     
     this.get_regulatory_docket_submissions_for_organization_entity_id = function(entity_id){
         var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/regulations_submitter.json?';
         return this._jsonp_request(endpoint, 
-        function(data){
-            return data.data;
-        });    
+            function(data){
+                return data.data;
+            });    
+    }
+    
+    this.search_for_bills = function(search_text){
+        search_text = encodeURIComponent(search_text);
+    
+        var endpoint = SUNLIGHT_ROOT_URI + '/bills/search?query=' + search_text + 
+            '&order=last_action_at&';
+        
+        return this._jsonp_request(endpoint, 
+            function(data){
+                var bills = _.map(data.data.results, 
+                        function(cur){
+                            return new Bill(cur);
+                        });
+                    
+                return bills;
+        });         
     }
 });

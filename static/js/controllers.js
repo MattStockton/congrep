@@ -166,10 +166,12 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
 
 var congress_search_ctrl = function ($scope, $http, $window, $q, $location, congress_service) {
     $scope.congress_search_text = "";
-    $scope.organization_search_text = ""
+    $scope.organization_search_text = "";
+    $scope.bill_search_text = "";
     $scope.search_error = undefined;
     $scope.legislator_search_results = [];
     $scope.organization_search_results = [];
+    $scope.bill_search_results = [];
     
     $scope.search_legislators = function(){
         congress_service.search_for_legislators($scope.congress_search_text).then(
@@ -200,6 +202,21 @@ var congress_search_ctrl = function ($scope, $http, $window, $q, $location, cong
                 }
             );  
     };
+
+    $scope.search_bills = function(){
+        congress_service.search_for_bills($scope.bill_search_text).then(
+                function(bills){
+                    if(bills.length == 1){
+                        $scope.go_to_bill(bills[0]);
+                        return;
+                    } else if(bills.length > 1){
+                        $scope.bill_search_results = bills;
+                    } else {
+                        $scope.search_error = "No results found";
+                    }
+                }
+            );  
+    };
     
     $scope.go_to_legislator = function(legislator){
         $location.path('legislator/' + legislator.bioguide_id);
@@ -208,6 +225,10 @@ var congress_search_ctrl = function ($scope, $http, $window, $q, $location, cong
     $scope.go_to_organization = function(organization){
         $location.path('organization/' + organization.id);
     };
+    
+    $scope.go_to_bill = function(bill){
+        $location.path('bill/' + bill.bill_id);
+    };    
 }
 
 var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
@@ -342,8 +363,21 @@ var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, 
     $scope.run_search($routeParams.entity_id);
 }
 
+var bill_detail_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
+
+    $scope.reset = function(){
+    }
+    
+    $scope.run_search = function(bill_id){
+        $scope.reset();
+    }
+    
+
+    $scope.run_search($routeParams.bill_id);
+}
 
 congress_app.controller('legislator_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', legislator_detail_ctrl]);
 congress_app.controller('congress_search_ctrl', ['$scope', '$http', '$window', '$q', '$location', 'congress_service', congress_search_ctrl]);
 congress_app.controller('organization_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', organization_detail_ctrl]);
+congress_app.controller('bill_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', bill_detail_ctrl]);
 
