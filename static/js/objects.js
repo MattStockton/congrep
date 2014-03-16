@@ -4,19 +4,19 @@ function PaginationInfo(data){
 }
 
 PaginationInfo.prototype.get_total_count = function() {
-       return this.count;
+    return this.count;
 }
 
 PaginationInfo.prototype.get_current_page_count = function() {
-       return this.page.count;
+    return this.page.count;
 }
 
 PaginationInfo.prototype.get_current_page = function() {
-       return this.page.page;
+    return this.page.page;
 }
 
 PaginationInfo.prototype.get_count_per_page = function() {
-       return this.page.per_page;
+    return this.page.per_page;
 }
 
 PaginationInfo.prototype.get_total_pages = function() {
@@ -50,11 +50,11 @@ PaginationInfo.prototype.get_previous_link_page = function(){
 }
 
 function Vote(data) {
-   _.extend(this, data);
+    _.extend(this, data);
 }
 
 Vote.prototype.get_vote_for = function(bioguide_id) {
-   return this.voters[bioguide_id].vote;
+    return this.voters[bioguide_id].vote;
 }
 
 Vote.prototype.get_democrat_votes = function(){
@@ -69,18 +69,20 @@ Vote.prototype.get_total_votes = function(){
     return this.breakdown.total;
 }
 
+Vote.prototype.has_bill = function(){
+    return !! this.bill;
+}
+
+Vote.prototype.get_bill = function(){
+    if(this.has_bill()){
+        return new Bill(this.bill);
+    }
+    return undefined;
+}
+
 Vote.prototype.has_bill_sponsor = function(){
-    return this.bill && this.bill.sponsor;
+    return this.has_bill() && this.get_bill().has_sponsor();
 }
-
-Vote.prototype.get_sponsor_full_name = function(){
-    return this.has_bill_sponsor() ? this.bill.sponsor.first_name + ' ' + this.bill.sponsor.last_name : "";
-}
-
-Vote.prototype.get_sponsor_bioguide_id = function(){
-    return this.has_bill_sponsor() ? this.bill.sponsor_id : undefined;
-}
-
 
 function Organization(data) {
     _.extend(this, data);
@@ -127,4 +129,29 @@ function Bill(data) {
     _.extend(this, data);
 }
 
+Bill.prototype.get_primary_title = function(){
+    if(this.short_title){
+        return this.short_title;
+    }
+    return this.official_title;
+}
 
+Bill.prototype.get_secondary_title = function(){
+    if(this.short_title){
+        return this.official_title;
+    }
+    return undefined;
+}
+
+Bill.prototype.has_sponsor = function(){
+    return !! this.sponsor;
+}
+
+Bill.prototype.get_sponsor_name = function(){
+    return this.has_sponsor() ? 
+        this.sponsor.first_name + ' ' + this.sponsor.last_name : "";
+}
+
+Bill.prototype.get_sponsor_bioguide_id = function(){
+    return this.has_sponsor() ? this.sponsor_id : undefined;
+}

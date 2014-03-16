@@ -165,12 +165,10 @@ congress_service.service('congress_service', function($http, $q) {
             endpoint = endpoint + 'last_action_at__lte=' + year + '-12-31&';
         }
         
-        return this._jsonp_request(endpoint, 
+        var me = this;
+        return this._jsonp_request(endpoint,
             function(data){
-            var bills = _.map(data.data.results, 
-                    function(cur){
-                        return new Bill(cur);
-                    });
+            var bills = me._bills_from_data(data);
                 
                 return {
                     bills : bills,
@@ -331,13 +329,7 @@ congress_service.service('congress_service', function($http, $q) {
 
     this.get_lobbying_bills_for_organization_entity_id = function(entity_id){
         var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/org/' + entity_id + '/bills.json?';
-        return this._jsonp_request(endpoint, 
-        function(data){
-            // Some of the bill titles are empty
-            return _.filter(data.data, function(bill){
-                return bill.title;
-            });
-        });    
+        return this._jsonp_request(endpoint, this._bills_from_data);    
     }
 
     this.get_regulatory_docket_mentions_for_organization_entity_id = function(entity_id){
@@ -362,14 +354,15 @@ congress_service.service('congress_service', function($http, $q) {
         var endpoint = SUNLIGHT_ROOT_URI + '/bills/search?query=' + search_text + 
             '&order=last_action_at&';
         
-        return this._jsonp_request(endpoint, 
-            function(data){
-                var bills = _.map(data.data.results, 
-                        function(cur){
-                            return new Bill(cur);
-                        });
-                    
-                return bills;
-        });         
+        return this._jsonp_request(endpoint, this.bills_from_data);         
+    }
+
+    this._bills_from_data = function(data){
+        var bills = _.map(data.data.results, 
+                function(cur){
+                    return new Bill(cur);
+                });
+            
+        return bills;
     }
 });

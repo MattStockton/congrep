@@ -140,6 +140,10 @@ var legislator_detail_ctrl = function ($scope, $http, $window, $q, $location, $r
         $location.path('organization/' + donor.id);
     };
     
+    $scope.go_to_bill = function(bill){
+        $location.path('bill/' + bill.bill_id);
+    };
+    
     $scope.filter_by_year = function(year){
         $scope.year = year;
         
