@@ -155,3 +155,7 @@ Bill.prototype.get_sponsor_name = function(){
 Bill.prototype.get_sponsor_bioguide_id = function(){
     return this.has_sponsor() ? this.sponsor_id : undefined;
 }
+
+Bill.prototype.get_url = function(){
+    return this.urls && this.urls.opencongress ? this.urls.opencongress : undefined;
+}

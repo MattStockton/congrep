@@ -81,7 +81,7 @@
                     <div ng-repeat="bill in bills_sponsored" class="list-group-item">
                         <h5 class="list-group-item-heading"><a ng-click="go_to_bill(bill)">{{ bill.get_primary_title()}}</a></h5>
                         <p ng-show="bill.get_secondary_title()" class="list-group-item-text">{{ bill.get_secondary_title() }}</p>
-                        <p class="list-group-item-text"><a href="{{ bill.urls.opencongress }}" target="_blank">Read the bill</a></p><br>
+                        <p class="list-group-item-text"><a href="{{ bill.get_url() }}" target="_blank">Read the bill</a></p><br>
                         <p class="list-group-item-text">Introduced on: {{ bill.introduced_on }}</p>
                         <p class="list-group-item-text">Last action on: {{ bill.last_action_at }}</p>
                         <p ng-show="bill.enacted_as" class="list-group-item-text text-success"><strong>Enacted</strong></p>             
@@ -109,7 +109,7 @@
                     <div ng-repeat="vote in votes" class="list-group-item">
                         <h5 ng-show="vote.has_bill()" class="list-group-item-heading"><a ng-click="go_to_bill(vote.get_bill())">{{ vote.get_bill().get_primary_title()}}</a></h5>
                         <p ng-show="vote.has_bill() && vote.get_bill().get_secondary_title()" class="list-group-item-text">{{ vote.get_bill().get_secondary_title() }}</p>
-                        <p ng-show="vote.has_bill()" class="list-group-item-text"><a href="{{ vote.get_bill().urls.opencongress }}" target="_blank">Read the bill</a></p><br>      
+                        <p ng-show="vote.has_bill()" class="list-group-item-text"><a href="{{ vote.get_bill().get_url() }}" target="_blank">Read the bill</a></p><br>      
                         <p ng-show="vote.has_bill() && vote.get_bill().has_sponsor()" 
                             class="list-group-item-text"><strong>Sponsor: </strong><a 
                             ng-click="go_to_legislator(vote.get_bill().get_sponsor_bioguide_id())">{{ vote.get_bill().get_sponsor_name() }}</a></p>

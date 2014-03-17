@@ -368,14 +368,24 @@ var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, 
 }
 
 var bill_detail_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
-
+    
     $scope.reset = function(){
+        $scope.bill = undefined;
     }
     
     $scope.run_search = function(bill_id){
         $scope.reset();
+        
+        congress_service.get_bill_by_bill_id(bill_id).then(
+            function(bill){
+                $scope.bill = bill;
+            }
+        ); 
     }
     
+    $scope.go_to_legislator = function(bioguide_id){
+        $location.path( 'legislator/' + bioguide_id);
+    };
 
     $scope.run_search($routeParams.bill_id);
 }

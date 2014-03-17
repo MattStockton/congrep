@@ -348,15 +348,30 @@ congress_service.service('congress_service', function($http, $q) {
             });    
     }
     
+    this._BILL_FIELDS = 'fields=short_ttle,official_title,sponsor,sponsor_id,urls,' +
+        'last_action_at,enacted_as,actions,upcoming,introduced_on';
+    
     this.search_for_bills = function(search_text){
         search_text = encodeURIComponent(search_text);
     
         var endpoint = SUNLIGHT_ROOT_URI + '/bills/search?query=' + search_text + 
-            '&order=last_action_at&';
+            '&order=last_action_at&' + this._BILL_FIELDS + '&';
         
         return this._jsonp_request(endpoint, this._bills_from_data);         
     }
 
+    this.get_bill_by_bill_id = function(bill_id){
+        var endpoint = SUNLIGHT_ROOT_URI + '/bills?bill_id=' + bill_id + '&' +
+            this._BILL_FIELDS + '&';
+            
+        return this._jsonp_request(endpoint, 
+                function(data){
+                    return new Bill(data.data.results[0]);
+                }
+        );         
+    }
+    
+    
     this._bills_from_data = function(data){
         var bills = _.map(data.data.results, 
                 function(cur){
