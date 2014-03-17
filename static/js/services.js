@@ -354,7 +354,7 @@ congress_service.service('congress_service', function($http, $q) {
         var endpoint = SUNLIGHT_ROOT_URI + '/bills/search?query=' + search_text + 
             '&order=last_action_at&';
         
-        return this._jsonp_request(endpoint, this.bills_from_data);         
+        return this._jsonp_request(endpoint, this._bills_from_data);         
     }
 
     this._bills_from_data = function(data){

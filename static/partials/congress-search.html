@@ -52,7 +52,7 @@
     <div ng-show="bill_search_results.length > 0">
         <div class="list-group">
             <a ng-repeat="bill in bill_search_results" ng-click="go_to_bill(bill)" class="list-group-item">
-               {{  bill.bill_ids }}
+               {{  bill.get_primary_title() }}
             </a>
         </div>
     </div>

@@ -380,8 +380,22 @@ var bill_detail_ctrl = function ($scope, $http, $window, $q, $location, $routePa
     $scope.run_search($routeParams.bill_id);
 }
 
+var index_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
+    $scope.go_to_home = function(){
+        $location.path('search');
+    }; 
+    
+    $scope.go_to_about = function(){
+        $location.path('about');
+    }; 
+}
+
+var about_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
+}
+
 congress_app.controller('legislator_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', legislator_detail_ctrl]);
 congress_app.controller('congress_search_ctrl', ['$scope', '$http', '$window', '$q', '$location', 'congress_service', congress_search_ctrl]);
 congress_app.controller('organization_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', organization_detail_ctrl]);
 congress_app.controller('bill_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', bill_detail_ctrl]);
-
+congress_app.controller('index_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', index_ctrl]);
+congress_app.controller('about_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', about_ctrl]);
