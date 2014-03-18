@@ -1,25 +1,28 @@
 <div class="col-md-10 column">
-    <h4>{{ bill.get_primary_title() }} <a href="{{ bill.get_url() }}" target="_blank">(Read the bill)</a></h4>
+    <h4>{{ bill.get_primary_title() }}</h4>
+    <p><a href="{{ bill.get_url() }}" target="_blank">Read the bill</a></p>
     <p ng-show="bill.get_secondary_title()"><strong>Details: </strong>{{ bill.get_secondary_title() }}</p>
     <p><strong>Introduced by: </strong><a ng-click="go_to_legislator(bill.get_sponsor_bioguide_id())">{{ bill.get_sponsor_name() }}</a></p>
     <p ng-show="bill.last_action_at"><strong>Last action on: </strong>{{ bill.last_action_at }}</p>
-    <p ng-show="bill.enacted_as" class="text-success"><strong>Enacted</strong></p>             
+    <p ng-show="bill.enacted_as" class="text-success"><strong>Enacted</strong></p><br>           
     
-    <div ng-show="bill.actions" class="panel panel-default">
-      <div class="panel-heading">Recent Actions</div>    
+    <div ng-show="bill.actions">
+      <h4><span class="label label-primary">Recent Actions</span></h4>
       <div class="list-group">
         <div ng-repeat="action in bill.actions" class="list-group-item">
             <p><strong>Info: </strong>{{ action.text }}</p>
             <p><strong>Date: </strong>{{ action.acted_at }}</p>
             <p ng-show="action.result"><strong>Result: </strong>{{ action.result }}</p>
         </div>
+      </div>
     </div>
-    <div ng-show="bill.upcoming" class="panel panel-default">
-      <div class="panel-heading">Upcoming Events</div>    
+    <div ng-show="bill.upcoming">
+      <h4><span class="label label-primary">Upcoming Events</span></h4>   
       <div class="list-group">
         <div ng-repeat="upcoming in bill.upcoming" class="list-group-item">
             <p><strong>Info: </strong>{{ upcoming.context }}</p>
             <p><strong>Date: </strong>{{ upcoming.legislative_day }}</p>
         </div>
+      </div>
     </div>
 </div>

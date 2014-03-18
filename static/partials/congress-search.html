@@ -1,10 +1,9 @@
 <div class="col-md-2 column">
 </div>
 <div class="col-md-8 column">
-    <h3 ng-show="search_error != undefined" class="text-danger">
+    <div ng-show="search_error" class="alert alert-danger">
         {{ search_error }}
-    </h3>
-
+    </div>
     <form ng-submit="search_legislators()" class="form-horizontal" role="form">
         <div class="form-group">
             <div class="input-group">

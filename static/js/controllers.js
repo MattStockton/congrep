@@ -391,7 +391,7 @@ var bill_detail_ctrl = function ($scope, $http, $window, $q, $location, $routePa
 }
 
 var index_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
-    $scope.go_to_home = function(){
+    $scope.go_to_search = function(){
         $location.path('search');
     }; 
     
@@ -401,6 +401,9 @@ var index_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, 
 }
 
 var about_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
+    $scope.go_to_search = function(){
+        $location.path('search');
+    }; 
 }
 
 congress_app.controller('legislator_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', legislator_detail_ctrl]);

@@ -19,5 +19,14 @@
     margin-top: 10px;
 }
 
+.cg-small-jumbotron {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
 body { padding-top: 80px;
+}
+
+a {
+    cursor: pointer;
 }
