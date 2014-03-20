@@ -360,6 +360,10 @@ var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, 
         );  
     }
  
+    $scope.go_to_lobbyist = function(lobbyist){
+        $location.path('lobbyist/' + lobbyist.lobbyist_entity);
+    }    
+    
     $scope.go_to_pac_recipient = function(recipient){
         alert("Go to PAC recipient");
     }    
@@ -390,6 +394,18 @@ var bill_detail_ctrl = function ($scope, $http, $window, $q, $location, $routePa
     $scope.run_search($routeParams.bill_id);
 }
 
+var lobbyist_detail_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
+    
+    $scope.reset = function(){
+    }
+    
+    $scope.run_search = function(entity_id){
+        $scope.reset();
+    }
+
+    $scope.run_search($routeParams.entity_id);
+}
+
 var index_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
     $scope.go_to_search = function(){
         $location.path('search');
@@ -410,5 +426,6 @@ congress_app.controller('legislator_detail_ctrl', ['$scope', '$http', '$window',
 congress_app.controller('congress_search_ctrl', ['$scope', '$http', '$window', '$q', '$location', 'congress_service', congress_search_ctrl]);
 congress_app.controller('organization_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', organization_detail_ctrl]);
 congress_app.controller('bill_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', bill_detail_ctrl]);
+congress_app.controller('lobbyist_detail_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', lobbyist_detail_ctrl]);
 congress_app.controller('index_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', index_ctrl]);
 congress_app.controller('about_ctrl', ['$scope', '$http', '$window', '$q', '$location', '$routeParams', 'congress_service', about_ctrl]);

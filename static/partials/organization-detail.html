@@ -45,7 +45,7 @@
             <h4><span class="label label-primary">Individuals Hired</span></h4>
              <ul ng-show="individual_lobbyists" class="list-group">
                 <li ng-repeat="lobbyist in individual_lobbyists" class="list-group-item">
-                    {{ lobbyist.lobbyist_name }} - {{ lobbyist.count }} engagements
+                    <a ng-click="go_to_lobbyist(lobbyist)">{{ lobbyist.lobbyist_name }}</a> - {{ lobbyist.count }} engagements
                 </li>
             </ul>   
             <h4><span class="label label-primary">Lobbying Issues</span></h4>
