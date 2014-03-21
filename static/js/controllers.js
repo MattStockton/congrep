@@ -397,11 +397,50 @@ var bill_detail_ctrl = function ($scope, $http, $window, $q, $location, $routePa
 var lobbyist_detail_ctrl = function ($scope, $http, $window, $q, $location, $routeParams, congress_service) {
     
     $scope.reset = function(){
+        $scope.lobbying_firms = [];
+        $scope.lobbying_clients = [];
+        $scope.lobbying_issues = [];
     }
     
     $scope.run_search = function(entity_id){
         $scope.reset();
+        
+        $scope.get_lobbying_firms(entity_id);
+        $scope.get_lobbying_clients(entity_id);
+        $scope.get_lobbying_issues(entity_id);
     }
+    
+    $scope.get_lobbying_firms = function(entity_id){
+        congress_service.get_lobbying_firms_for_individual_entity_id(entity_id).then(
+            function(lobbying_firms){
+                $scope.lobbying_firms = lobbying_firms;
+            }
+        );  
+    }
+
+    $scope.get_lobbying_clients = function(entity_id){
+        congress_service.get_lobbying_clients_for_individual_entity_id(entity_id).then(
+            function(lobbying_clients){
+                $scope.lobbying_clients = lobbying_clients;
+            }
+        );  
+    }
+    
+    $scope.get_lobbying_issues = function(entity_id){
+        congress_service.get_lobbying_issues_for_individual_entity_id(entity_id).then(
+            function(lobbying_issues){
+                $scope.lobbying_issues = lobbying_issues;
+            }
+        );  
+    }
+    
+    $scope.go_to_client = function(client){
+        $location.path( 'organization/' + client.client_entity);
+    }    
+    
+    $scope.go_to_firm = function(firm){
+        $location.path( 'organization/' + firm.registrant_entity);
+    } 
 
     $scope.run_search($routeParams.entity_id);
 }

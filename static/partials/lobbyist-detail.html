@@ -1,5 +1,30 @@
 <div class="col-md-2 column">
 </div>
 <div class="col-md-10 column">
-    Placeholder for Lobbyist
+    <tabset>
+        <tab heading="Employers">
+            <h4><span class="label label-primary">Employed by the following organizations</span></h4>
+            <ul class="list-group">
+                <li ng-repeat="firm in lobbying_firms" class="list-group-item">
+                    <a ng-click="go_to_firm(firm)">{{ firm.registrant_name }}</a>
+                </li>
+            </ul>
+        </tab>
+        <tab heading="Clients">
+            <h4><span class="label label-primary">Contracted by the following organizations</span></h4>
+            <ul class="list-group">
+                <li ng-repeat="client in lobbying_clients" class="list-group-item">
+                    <a ng-click="go_to_client(client)">{{ client.client_name }}</a>
+                </li>
+            </ul>
+        </tab>
+        <tab heading="Lobbying Issues">
+            <h4><span class="label label-primary">Lobbied on the following issues</span></h4>
+             <ul ng-show="lobbying_issues" class="list-group">
+                <li ng-repeat="issue in lobbying_issues" class="list-group-item">
+                    {{ issue.issue }} - {{ issue.count }} engagements
+                </li>
+            </ul>   
+        </tab>
+    </tabset>
 </div>

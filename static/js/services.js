@@ -371,7 +371,6 @@ congress_service.service('congress_service', function($http, $q) {
         );         
     }
     
-    
     this._bills_from_data = function(data){
         var bills = _.map(data.data.results, 
                 function(cur){
@@ -379,5 +378,29 @@ congress_service.service('congress_service', function($http, $q) {
                 });
             
         return bills;
+    }
+    
+    this.get_lobbying_firms_for_individual_entity_id = function(entity_id){
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/indiv/' + entity_id + '/registrants.json?';
+        return this._jsonp_request(endpoint, 
+                function(data){
+                    return data.data;
+                });     
+    }
+    
+    this.get_lobbying_clients_for_individual_entity_id = function(entity_id){
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/indiv/' + entity_id + '/clients.json?';
+        return this._jsonp_request(endpoint, 
+                function(data){
+                    return data.data;
+                });     
+    }
+    
+    this.get_lobbying_issues_for_individual_entity_id = function(entity_id){
+        var endpoint = TRANSPARENCY_DATA_ROOT_URI + 'aggregates/indiv/' + entity_id + '/issues.json?';
+        return this._jsonp_request(endpoint, 
+                function(data){
+                    return data.data;
+                });     
     }
 });
