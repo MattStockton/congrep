@@ -109,6 +109,10 @@ Legislator.prototype.get_bioguide_id = function(){
     return this.metadata.bioguide_id;
 }
 
+Legislator.prototype.has_bioguide_id = function(){
+	return !! this.metadata.bioguide_id;
+}
+
 function RecipientPartyBreakdown(data) {
     _.extend(this, data);
 }
