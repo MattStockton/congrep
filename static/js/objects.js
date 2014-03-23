@@ -110,7 +110,7 @@ Legislator.prototype.get_bioguide_id = function(){
 }
 
 Legislator.prototype.has_bioguide_id = function(){
-	return !! this.metadata.bioguide_id;
+    return !! this.metadata.bioguide_id;
 }
 
 function RecipientPartyBreakdown(data) {

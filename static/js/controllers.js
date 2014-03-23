@@ -355,11 +355,11 @@ var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, 
     $scope.go_to_recipient = function(recipient){
         congress_service.get_legislator_by_entity_id(recipient.id).then(
             function(legislator){
-            	if(legislator && legislator.has_bioguide_id()){
-            		$location.path('legislator/' + legislator.get_bioguide_id());
-            	} else {
-            		$('#no_data_modal').modal('show')
-            	}
+                if(legislator && legislator.has_bioguide_id()){
+                    $location.path('legislator/' + legislator.get_bioguide_id());
+                } else {
+                    $('#no_data_modal').modal('show')
+                }
             }
         );  
     }
@@ -369,7 +369,7 @@ var organization_detail_ctrl = function ($scope, $http, $window, $q, $location, 
     }    
     
     $scope.go_to_pac_recipient = function(recipient){
-        alert("Go to PAC recipient");
+        $location.path('organization/' + recipient.id);
     }    
 
     $scope.run_search($routeParams.entity_id);

@@ -6,8 +6,9 @@
     </div>
     <form ng-submit="search_legislators()" class="form-horizontal" role="form">
         <div class="form-group">
+            <h4><span class="label label-primary">Search for a Member of Congress by name</span></h4>
             <div class="input-group">
-                <input ng-model="congress_search_text" type="text" class="form-control" placeholder="Search for a Member of Congress by name"/>
+                <input ng-model="congress_search_text" type="text" class="form-control" placeholder="Example: Gwen Moore"/>
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-default">Search</button>
                 </span>
@@ -15,7 +16,7 @@
         </div>
     </form>
     <div ng-show="legislator_search_results.length > 0">
-        <h4><span class="label label-primary">Matching Legislators</span></h4>
+        <h4><span class="label label-default">Matching Legislators</span></h4>
         <div class="list-group">
             <a ng-repeat="legislator in legislator_search_results" ng-click="go_to_legislator(legislator)" class="list-group-item">
                {{legislator.first_name}} {{ legislator.last_name }} - {{ legislator.chamber }} ({{ legislator.party }}), {{ legislator.state_name }}
@@ -24,8 +25,9 @@
     </div>
     <form ng-submit="search_organizations()" class="form-horizontal" role="form">
         <div class="form-group">
+            <h4><span class="label label-primary">Search for an Organization or Company by name</span></h4>
             <div class="input-group">
-                <input ng-model="organization_search_text" type="text" class="form-control" placeholder="Search for an Organization or Company by name"/>
+                <input ng-model="organization_search_text" type="text" class="form-control" placeholder="Example: General Dynamics"/>
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-default">Search</button>
                 </span>
@@ -33,7 +35,7 @@
         </div>
     </form>
     <div ng-show="organization_search_results.length > 0">
-        <h4><span class="label label-primary">Matching Organizations & Companies</span></h4>
+        <h4><span class="label label-default">Matching Organizations & Companies</span></h4>
         <div class="list-group">
             <a ng-repeat="organization in organization_search_results" ng-click="go_to_organization(organization)" class="list-group-item">
                {{  organization.name }}
@@ -42,8 +44,9 @@
     </div>
     <form ng-submit="search_bills()" class="form-horizontal" role="form">
         <div class="form-group">
+            <h4><span class="label label-primary">Search for a Bill by included text</span></h4>
             <div class="input-group">
-                <input ng-model="bill_search_text" type="text" class="form-control" placeholder="Search for a Bill"/>
+                <input ng-model="bill_search_text" type="text" class="form-control" placeholder="Example: Gun Control"/>
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-default">Search</button>
                 </span>
@@ -51,7 +54,7 @@
         </div>
     </form>
     <div ng-show="bill_search_results.length > 0">
-        <h4><span class="label label-primary">Matching Bills</span></h4>
+        <h4><span class="label label-default">Matching Bills</span></h4>
         <div class="list-group">
             <a ng-repeat="bill in bill_search_results" ng-click="go_to_bill(bill)" class="list-group-item">
                {{  bill.get_primary_title() }}
